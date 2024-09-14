@@ -1,0 +1,3 @@
+[submodule "YarEngine"]
+	path = YarEngine
+	url = https://github.com/agoogaloo/Yar-Engine

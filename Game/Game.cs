@@ -5,19 +5,17 @@ using YarEngine.Inputs;
 using YarEngine.Saves;
 using Raylib_cs;
 
-namespace CaptGrapple;
+namespace ArcadeJam;
 
-public class Game
-{
+public class Game {
 
-	public static void Run()
-	{
+	public static void Run() {
 		//setting up raylib stuff
+		SaveManager.savePath = "res/saves/save.txt";
 		GameBase.Init("Fishin' Time!");
-		GameBase.borderCol = Globals.palette[1];
-		GameBase.debugScreen.SetFont(Assets.smallPixel);
-		GameBase.debugScreen.RegisterModule(delegate
-		{
+		GameBase.borderCol = Color.Black;
+		GameBase.debugScreen.SetFont(Assets.monoFont);
+		GameBase.debugScreen.RegisterModule(delegate {
 			return new YarEngine.Debug.ColVisualiser();
 		});
 		GameBase.debugScreen.terminal.AddCommand("clearEntityLayer", EntityManager.ClearCommand);
@@ -28,14 +26,10 @@ public class Game
 
 		//adding all the base game components
 
-		Menu menu = new();
-		menu.StartLevels();
-		// EntityManager.QueueEntity(Globals.player);
-		EntityManager.QueueEntity(new GameBorders());
 
-		//creatting the camera
+		//creating the camera
 		GameCamera gameCam = new(GameBase.GameSize);
-		gameCam.offset.X = -55;
+		/*gameCam.offset.X = -55;*/
 
 		//setting the key/controller bindings
 		InputHandler.AddButtonBind("L", KeyboardKey.Left);
@@ -55,15 +49,11 @@ public class Game
 		GameBase.Run();
 
 	}
-	private static void Update(float time)
-	{
+	private static void Update(float time) {
 		EntityManager.Update(time);
-		GameMode.ActiveGameMode.Update(time);
 		//switching fullscreen/scaling modes
-		if (Raylib.IsKeyPressed(KeyboardKey.F1))
-		{
-			switch (GameBase.FullScreen)
-			{
+		if (Raylib.IsKeyPressed(KeyboardKey.F1)) {
+			switch (GameBase.FullScreen) {
 				case FullScreenMode.windowed:
 					GameBase.FullScreen = FullScreenMode.borderless;
 					break;
@@ -75,15 +65,13 @@ public class Game
 					break;
 			}
 		}
-		if (Raylib.IsKeyPressed(KeyboardKey.F2))
-		{
+		if (Raylib.IsKeyPressed(KeyboardKey.F2)) {
 			GameBase.PerfectScaling = !GameBase.PerfectScaling;
 		}
 	}
-	private static void PixelDraw(GameCamera gameCam)
-	{
-		Raylib.ClearBackground(Globals.palette[0]);
+	private static void PixelDraw(GameCamera gameCam) {
+		/*Raylib.ClearBackground(Globals.palette[0]);*/
 		EntityManager.Draw(gameCam);
-		GameMode.ActiveGameMode.Draw(gameCam);
+		/*GameMode.ActiveGameMode.Draw(gameCam);*/
 	}
 }

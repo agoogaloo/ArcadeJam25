@@ -4,16 +4,18 @@ using YarEngine.Graphics;
 using YarEngine.Inputs;
 using YarEngine.Saves;
 using Raylib_cs;
+using ArcadeJam.Entities;
 
 namespace ArcadeJam;
 
 public class Game {
 
 	public static void Run() {
-		//setting up raylib stuff
+		//setting up raylib/engine stuff
 		SaveManager.savePath = "res/saves/save.txt";
 		GameBase.Init("Fishin' Time!");
-		GameBase.borderCol = Color.Black;
+		GameBase.GameSize = new(200, 150);
+		GameBase.borderCol = Globals.palette[0];
 		GameBase.debugScreen.SetFont(Assets.monoFont);
 		GameBase.debugScreen.RegisterModule(delegate {
 			return new YarEngine.Debug.ColVisualiser();
@@ -23,9 +25,6 @@ public class Game {
 
 		Raylib.SetWindowIcon(Raylib.LoadImage("res/textures/icon.png"));
 		Raylib.SetExitKey(0);
-
-		//adding all the base game components
-
 
 		//creating the camera
 		GameCamera gameCam = new(GameBase.GameSize);
@@ -45,6 +44,9 @@ public class Game {
 		GameBase.gameCam = gameCam;
 
 		SaveManager.SaveData<string>("version", "v0.0");
+
+		//adding all the base game components
+		EntityManager.QueueEntity(new Player());
 
 		GameBase.Run();
 
@@ -70,7 +72,7 @@ public class Game {
 		}
 	}
 	private static void PixelDraw(GameCamera gameCam) {
-		/*Raylib.ClearBackground(Globals.palette[0]);*/
+		Raylib.ClearBackground(Globals.palette[4]);
 		EntityManager.Draw(gameCam);
 		/*GameMode.ActiveGameMode.Draw(gameCam);*/
 	}

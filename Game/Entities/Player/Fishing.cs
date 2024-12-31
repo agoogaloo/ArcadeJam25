@@ -28,7 +28,7 @@ public class Fishing {
 	}
 
 	public Vector2 Update(double time) {
-		lureWeight = 0.9f;
+		lureWeight = 0.2f;
 		lineLenFact = 0.25f;
 		Vector2 lenVec = playerBounds.Centre - lureBounds.Centre;
 		switch (castState) {
@@ -88,7 +88,7 @@ public class Fishing {
 		}
 		if (InputHandler.GetButton(reelInputs[reelIndex]).JustPressed) {
 			reelIndex++;
-			targetLen = Math.Max(0.1f, targetLen - 6f);
+			targetLen = Math.Max(0.1f, targetLen - 5f);
 		}
 		reelIndex %= reelInputs.Length;
 

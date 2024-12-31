@@ -10,7 +10,7 @@ namespace ArcadeJam.Entities;
 public class Player : Entity {
 
 
-	float accel = 0.5f, maxSpeed = 2.0f, friction = 0.1f;
+	float accel = 0.4f, maxSpeed = 2.0f, friction = 0.1f;
 	Rect bounds = new(10, 10, 8, 11);
 	Vector2 vel = new(0, 0);
 	Sprite sprite = new(Assets.player);
@@ -22,7 +22,6 @@ public class Player : Entity {
 	}
 
 	public override void Update(double updateTime) {
-		accel = 0.3f;
 		//friction
 		if (vel.X > 0) {
 			vel.X -= MathF.Min(friction, vel.X);

@@ -39,6 +39,10 @@ public class Game {
 		InputHandler.AddButtonBind("B", KeyboardKey.Z);
 		InputHandler.AddButtonBind("Debug", KeyboardKey.Grave);
 		// controller binds
+		InputHandler.AddButtonBind("L", GPadInput.RStickLeft);
+		InputHandler.AddButtonBind("R", GPadInput.RStickRight);
+		InputHandler.AddButtonBind("U", GPadInput.RStickUp);
+		InputHandler.AddButtonBind("D", GPadInput.RStickDown);
 		InputHandler.AddButtonBind("L", GPadInput.LStickLeft);
 		InputHandler.AddButtonBind("R", GPadInput.LStickRight);
 		InputHandler.AddButtonBind("U", GPadInput.LStickUp);

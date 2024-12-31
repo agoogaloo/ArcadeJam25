@@ -38,6 +38,13 @@ public class Game {
 		InputHandler.AddButtonBind("A", KeyboardKey.X);
 		InputHandler.AddButtonBind("B", KeyboardKey.Z);
 		InputHandler.AddButtonBind("Debug", KeyboardKey.Grave);
+		// controller binds
+		InputHandler.AddButtonBind("L", GPadInput.LStickLeft);
+		InputHandler.AddButtonBind("R", GPadInput.LStickRight);
+		InputHandler.AddButtonBind("U", GPadInput.LStickUp);
+		InputHandler.AddButtonBind("D", GPadInput.LStickDown);
+		InputHandler.AddButtonBind("A", GPadInput.FaceD);
+		InputHandler.AddButtonBind("B", GPadInput.FaceR);
 
 		GameBase.updateMethod = Update;
 		GameBase.pixelDraw = PixelDraw;

@@ -17,7 +17,7 @@ public class Player : Entity {
 	Fishing fishing;
 
 	public Player() {
-		fishing = new(bounds);
+		fishing = new(bounds, vel);
 
 	}
 

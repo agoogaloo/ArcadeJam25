@@ -15,8 +15,11 @@ public class Fishing {
 
 	CastState castState = CastState.Idle;
 	Vector2 lureVel;
-	float lineLen = 0, targetLen = 0;
+	float lineLen = 0, targetLen = 0, lineLenFact = 0.2f;
 	float lureWeight = 0.05f;
+
+	string[] reelInputs = ["U", "R", "D", "L"];
+	int reelIndex = 0;
 
 
 	public Fishing(Rect pBounds, Vector2 pVel) {
@@ -25,7 +28,8 @@ public class Fishing {
 	}
 
 	public Vector2 Update(double time) {
-		float lureWeight = 0.9f;
+		lureWeight = 0.9f;
+		lineLenFact = 0.25f;
 		Vector2 lenVec = playerBounds.Centre - lureBounds.Centre;
 		switch (castState) {
 			case CastState.Idle:
@@ -38,31 +42,58 @@ public class Fishing {
 			case CastState.Casting:
 				lureVel *= dragFact;
 				lureBounds.Centre += lureVel;
-				if (lureVel.Length() <= 0.1) {
+				if (lureVel.Length() <= 0.1 || InputHandler.GetButton("A").JustPressed) {
 					castState = CastState.Cast;
 					lineLen = lenVec.Length();
+					targetLen = lineLen;
 				}
 				break;
 
 			case CastState.Cast:
-				if (lureBounds.Intersects(playerBounds)) {
+				// shorten the line if your reeling
+				reel();
+				lineLen -= (lineLen - targetLen) * lineLenFact;
+				// finish fishing if your done reeling
+				if (lineLen <= 1) {
 					castState = CastState.Idle;
 				}
-				// if the lure is pulled away, the line holds them the same distance apart
+				// make sure you dont get seperated by more than the line length
 				if (lenVec.Length() > lineLen) {
 					Vector2 neededMove = lenVec * ((lenVec.Length() / lineLen) - 1);
-
 					lureBounds.Centre += neededMove * (1 - lureWeight);
 					playerBounds.Centre -= neededMove * lureWeight;
 				}
 				break;
 		}
 		return Vector2.Zero;
+
 	}
 
 	private void cast(float strength) {
 		lureVel = new(0, -strength);
 		castState = CastState.Casting;
+		reelIndex = -1;
+	}
+	private void reel() {
+		// if reeling hasnt started yet, then we start with the next direction pressed
+		if (reelIndex == -1) {
+			for (int i = 0; i < reelInputs.Length; i++) {
+				if (InputHandler.GetButton(reelInputs[i]).JustPressed) {
+					reelIndex = i + 1;
+					targetLen -= 2f;
+					reelIndex %= reelInputs.Length;
+				}
+			}
+			return;
+		}
+		if (InputHandler.GetButton(reelInputs[reelIndex]).JustPressed) {
+			reelIndex++;
+			targetLen = Math.Max(0.1f, targetLen - 6f);
+		}
+		reelIndex %= reelInputs.Length;
+
+
+
 	}
 
 	public void Draw(GameCamera cam) {
@@ -70,5 +101,4 @@ public class Fishing {
 		lureSprite.Draw(cam, lureBounds);
 	}
 }
-
 enum CastState { Idle, Casting, Cast }

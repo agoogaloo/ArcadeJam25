@@ -22,6 +22,7 @@ public class Player : Entity {
 	}
 
 	public override void Update(double updateTime) {
+		accel = 0.3f;
 		//friction
 		if (vel.X > 0) {
 			vel.X -= MathF.Min(friction, vel.X);

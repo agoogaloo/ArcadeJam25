@@ -15,10 +15,11 @@ public class Player : Entity {
 	Vector2 vel = new(0, 0);
 	Sprite sprite = new(Assets.player);
 	Fishing fishing;
+	Collider<Player> collider;
 
 	public Player() {
 		fishing = new(bounds, vel);
-
+		collider = new(bounds, this);
 	}
 
 	public override void Update(double updateTime) {
@@ -35,7 +36,7 @@ public class Player : Entity {
 		else {
 			vel.Y -= MathF.Max(-friction, vel.Y);
 		}
-		if (InputHandler.GetButton("B").Held) {
+		if (!InputHandler.GetButton("A").Held && fishing.castState != CastState.Casting) {
 			paddle();
 		}
 		fishing.Update(updateTime);
@@ -81,7 +82,7 @@ public class Player : Entity {
 	}
 
 	public override void Draw(GameCamera cam) {
-		sprite.Draw(cam, bounds);
 		fishing.Draw(cam);
+		sprite.Draw(cam, bounds);
 	}
 }

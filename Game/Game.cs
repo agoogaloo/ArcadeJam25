@@ -58,6 +58,7 @@ public class Game {
 
 		//adding all the base game components
 		EntityManager.QueueEntity(new Player());
+		/*EntityManager.QueueEntity(new Fish(new(50, 50)));*/
 
 		GameBase.Run();
 
@@ -83,8 +84,7 @@ public class Game {
 		}
 	}
 	private static void PixelDraw(GameCamera gameCam) {
-		Raylib.ClearBackground(Globals.palette[4]);
+		Raylib.ClearBackground(Globals.palette[2]);
 		EntityManager.Draw(gameCam);
-		/*GameMode.ActiveGameMode.Draw(gameCam);*/
 	}
 }

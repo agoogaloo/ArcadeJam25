@@ -7,6 +7,7 @@ using YarEngine.Physics;
 namespace ArcadeJam.Entities;
 public class Fishing {
 	float maxRelease = 0.5f, dragFact = 0.85f;
+	string[] reelInputs = ["U", "R", "D", "L"];
 
 	Sprite lureSprite = new(Assets.lure);
 	public Rect lureBounds { get; private set; } = new(0, 0, 5, 5);
@@ -15,12 +16,14 @@ public class Fishing {
 
 	public CastState castState { get; private set; } = CastState.Idle;
 	Vector2 lureVel;
+	public RodInputs inputs { get; private set; }
 	Collider<Fishing> collider;
 	Fish? bitFish;
 	float lineLen = 0, targetLen = 0, lineLenFact = 0.2f;
 	float lureWeight = 0.05f;
 
-	string[] reelInputs = ["U", "R", "D", "L"];
+	float castTimer = 0;
+
 	int reelIndex = 0;
 
 
@@ -29,26 +32,26 @@ public class Fishing {
 		playerVel = pVel;
 		collider = new(lureBounds, this);
 		collider.Add();
+		inputs = new(this);
 	}
 
 	public Vector2 Update(double time) {
-		lureWeight = 0.95f;
 		Vector2 lenVec = playerBounds.Centre - lureBounds.Centre;
+		inputs.Update(time);
+
 		switch (castState) {
 			case CastState.Idle:
 				lureBounds.Centre = playerBounds.Centre;
-				if (InputHandler.GetButton("A").JustReleased) {
-					Cast(10);
-				}
 				break;
 
 			case CastState.Casting:
 				lureVel *= dragFact;
 				lureBounds.Centre += lureVel;
-				if (lureVel.Length() <= 0.1 || InputHandler.GetButton("A").JustPressed) {
+				if (lureVel.Length() <= 0.5 || InputHandler.GetButton("A").JustPressed) {
 					castState = CastState.Cast;
 					lineLen = lenVec.Length();
 					targetLen = lineLen;
+					collider.Add();
 				}
 				break;
 
@@ -59,6 +62,7 @@ public class Fishing {
 				// finish fishing if your done reeling
 				if (lineLen <= 1) {
 					castState = CastState.Idle;
+					collider.Remove();
 				}
 				// make sure you dont get seperated by more than the line length
 				if (lenVec.Length() > lineLen) {
@@ -72,8 +76,8 @@ public class Fishing {
 
 	}
 
-	private void Cast(float strength) {
-		lureVel = new(0, -strength);
+	public void Cast(float strength, float angle = 0) {
+		lureVel = new(angle, -strength);
 		castState = CastState.Casting;
 		reelIndex = -1;
 	}

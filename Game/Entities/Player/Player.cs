@@ -1,5 +1,6 @@
 
 using System.Numerics;
+using YarEngine;
 using YarEngine.Entities;
 using YarEngine.Graphics;
 using YarEngine.Inputs;
@@ -16,10 +17,21 @@ public class Player : Entity {
 	Sprite sprite = new(Assets.player);
 	Fishing fishing;
 	Collider<Player> collider;
+	GameCamera? camera;
+
+	bool holdingRod = false, lockMove = false;
+	float inputTime = 0.3f;
+	public float castTimer { get; private set; } = 0;
+	public float backTimer { get; private set; } = 0;
+	public float leftTimer { get; private set; } = 0;
+	public float rightTimer { get; private set; } = 0;
 
 	public Player() {
 		fishing = new(bounds, vel);
 		collider = new(bounds, this);
+		GameBase.debugScreen.RegisterModule(delegate {
+			return new PlayerInfoMod(this, fishing);
+		});
 	}
 
 	public override void Update(double updateTime) {
@@ -36,13 +48,17 @@ public class Player : Entity {
 		else {
 			vel.Y -= MathF.Max(-friction, vel.Y);
 		}
-		if (!InputHandler.GetButton("A").Held && fishing.castState != CastState.Casting) {
+		// don't move if you are holding the fishing rod 
+		holdingRod = InputHandler.GetButton("A").Held || fishing.castState == CastState.Casting;
+		if (!holdingRod) {
 			paddle();
 		}
 		fishing.Update(updateTime);
 
 		bounds.Centre += vel;
+		LockToScreen();
 	}
+
 
 	private void paddle() {
 		//input vector
@@ -81,7 +97,25 @@ public class Player : Entity {
 		}
 	}
 
+	private void LockToScreen() {
+		if (camera == null) {
+			return;
+		}
+		if (bounds.X < camera.offset.X) {
+			bounds.X = camera.offset.X;
+		}
+		if (bounds.X + bounds.Width > camera.offset.X + camera.screenSize.X) {
+			bounds.X = camera.offset.X + camera.screenSize.X - bounds.Width;
+		}
+		if (bounds.Y < camera.offset.Y) {
+			bounds.Y = camera.offset.Y;
+		}
+		if (bounds.Y + bounds.Height > camera.offset.Y + camera.screenSize.Y) {
+			bounds.Y = camera.offset.Y + camera.screenSize.Y - bounds.Height;
+		}
+	}
 	public override void Draw(GameCamera cam) {
+		camera = cam;
 		fishing.Draw(cam);
 		sprite.Draw(cam, bounds);
 	}

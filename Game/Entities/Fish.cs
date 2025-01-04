@@ -44,6 +44,7 @@ public class Fish : Entity {
 	}
 	private void hitLure(Fishing lure) {
 		bitLure = true;
+		lure.Bite(this);
 
 	}
 	public override void Draw(GameCamera cam) {

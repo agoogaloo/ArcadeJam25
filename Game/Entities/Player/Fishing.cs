@@ -7,12 +7,12 @@ using YarEngine.Physics;
 namespace ArcadeJam.Entities;
 
 public class Fishing {
-	float maxRelease = 0.5f, dragFact = 0.85f, lureWeight = 0.05f;
+	float maxTension = 1f, dragFact = 0.85f, lureWeight = 0.05f;
 	string[] reelInputs = ["U", "R", "D", "L"];
 
 	Sprite lureSprite = new(Assets.lure);
 	public Rect lureBounds { get; private set; } = new(0, 0, 5, 5);
-	Rect playerBounds;
+	public Rect playerBounds { get; private set; }
 	Vector2 playerVel;
 
 	public CastState castState { get; private set; } = CastState.Idle;
@@ -32,7 +32,7 @@ public class Fishing {
 		playerBounds = pBounds;
 		playerVel = pVel;
 		collider = new(lureBounds, this);
-		collider.Add();
+		collider.Remove();
 		inputs = new(this);
 	}
 
@@ -60,17 +60,18 @@ public class Fishing {
 			case CastState.Cast:
 				// shorten the line if your reeling
 				Reel();
-				if (lineLen <= 1) {
+				if (lineLen <= 0.2) {
 					castState = CastState.Idle;
 					collider.Remove();
 				}
 				DoLinePhysics();
 				break;
 			case CastState.Bite:
+				lureBounds.Centre = bitFish.bounds.Centre;
 				Reel();
-				if (lineLen <= 1) {
+				if (lineLen <= 0.2) {
 					castState = CastState.Idle;
-					bitFish.shouldRemove = true;
+					bitFish.Catch();
 					collider.Remove();
 				}
 				DoLinePhysics();
@@ -116,14 +117,26 @@ public class Fishing {
 	private void DoLinePhysics() {
 		Vector2 lenVec = playerBounds.Centre - lureBounds.Centre;
 		lineLen -= (lineLen - targetLen) * lineLenFact;
+		maxTension = 10;
 		// make sure you dont get seperated by more than the line length
 		if (lenVec.Length() > lineLen) {
-			Vector2 neededMove = lenVec * ((lenVec.Length() / lineLen) - 1);
+			// if its pulled more than the tension shuold allow, then line is let out
+			if (lenVec.Length() - lineLen > maxTension) {
+				Console.WriteLine("too much tension!" + (lenVec.Length() - lineLen));
+				lineLen = lenVec.Length() - maxTension;
+				targetLen += maxTension;
+			}
+
+			Vector2 neededMove = Vector2.Normalize(lenVec);
+			neededMove *= (lenVec.Length() - lineLen);
 			lureBounds.Centre += neededMove * (1 - lineWeight);
 			playerBounds.Centre -= neededMove * lineWeight;
+			if (bitFish != null) {
+				bitFish.bounds.Centre = lureBounds.Centre;
+			}
 		}
-
 	}
+
 	public void Bite(Fish fish) {
 		if (castState == CastState.Cast || castState == CastState.Bite) {
 			bitFish = fish;

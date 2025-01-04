@@ -14,7 +14,7 @@ public class Player : Entity {
 	float accel = 0.4f, maxSpeed = 2.0f, friction = 0.1f;
 	Rect bounds = new(10, 10, 8, 11);
 	Vector2 vel = new(0, 0);
-	Sprite sprite = new(Assets.player);
+	Sprite sprite = new(Assets.player, 2);
 	Fishing fishing;
 	Collider<Player> collider;
 	GameCamera? camera;
@@ -27,6 +27,7 @@ public class Player : Entity {
 	public float rightTimer { get; private set; } = 0;
 
 	public Player() {
+		sprite.frameDelay = 0.2;
 		fishing = new(bounds, vel);
 		collider = new(bounds, this);
 		GameBase.debugScreen.RegisterModule(delegate {
@@ -35,6 +36,7 @@ public class Player : Entity {
 	}
 
 	public override void Update(double updateTime) {
+		sprite.frameDelay = 0.2;
 		//friction
 		if (vel.X > 0) {
 			vel.X -= MathF.Min(friction, vel.X);
@@ -51,7 +53,7 @@ public class Player : Entity {
 		// don't move if you are holding the fishing rod 
 		holdingRod = InputHandler.GetButton("A").Held || fishing.castState == CastState.Casting;
 		if (!holdingRod) {
-			paddle();
+			paddle((float)updateTime);
 		}
 		fishing.Update(updateTime);
 
@@ -60,7 +62,7 @@ public class Player : Entity {
 	}
 
 
-	private void paddle() {
+	private void paddle(float time) {
 		//input vector
 		Vector2 applied = Vector2.Zero;
 		if (InputHandler.GetButton("B").Held) {
@@ -80,6 +82,7 @@ public class Player : Entity {
 		}
 		if (applied != Vector2.Zero) {
 			applied = Vector2.Normalize(applied);
+			sprite.Update(time);
 		}
 		applied *= accel;
 		// only moving if they are slower than max speed (breaks with diagonals)

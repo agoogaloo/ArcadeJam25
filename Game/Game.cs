@@ -21,7 +21,9 @@ public class Game {
 			return new YarEngine.Debug.ColVisualiser();
 		});
 		GameBase.debugScreen.terminal.AddCommand("clearEntityLayer", EntityManager.ClearCommand);
-
+		GameBase.debugScreen.terminal.AddCommand("fish", () => {
+			EntityManager.QueueEntity(new Fish(new(50, 50)));
+		});
 
 		Raylib.SetWindowIcon(Raylib.LoadImage("res/textures/icon.png"));
 		Raylib.SetExitKey(0);

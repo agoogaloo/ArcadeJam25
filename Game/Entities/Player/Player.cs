@@ -12,9 +12,12 @@ public class Player : Entity {
 
 
 	float accel = 0.4f, maxSpeed = 2.0f, friction = 0.1f;
-	Rect bounds = new(10, 10, 8, 11);
+	Rect bounds = new(10, 10, 3, 6);
 	Vector2 vel = new(0, 0);
-	Sprite sprite = new(Assets.player, 2);
+	Sprite rodSprite = new(Assets.playerRod, 7);
+	Sprite rollSprite = new(Assets.playerRoll, 3);
+	Sprite paddleSprite = new(Assets.playerPaddle, 4, new(0.5f, 0));
+	Sprite lureSprite = new(Assets.lure);
 	Fishing fishing;
 	Collider<Player> collider;
 	GameCamera? camera;
@@ -27,7 +30,7 @@ public class Player : Entity {
 	public float rightTimer { get; private set; } = 0;
 
 	public Player() {
-		sprite.frameDelay = 0.2;
+		paddleSprite.frameDelay = 0.1;
 		fishing = new(bounds, vel);
 		collider = new(bounds, this);
 		GameBase.debugScreen.RegisterModule(delegate {
@@ -36,7 +39,8 @@ public class Player : Entity {
 	}
 
 	public override void Update(double updateTime) {
-		sprite.frameDelay = 0.2;
+		Sprite paddleSprite = new(Assets.playerPaddle, 4, new(1, 0));
+		paddleSprite.frameDelay = 0.1;
 		//friction
 		if (vel.X > 0) {
 			vel.X -= MathF.Min(friction, vel.X);
@@ -82,7 +86,7 @@ public class Player : Entity {
 		}
 		if (applied != Vector2.Zero) {
 			applied = Vector2.Normalize(applied);
-			sprite.Update(time);
+			paddleSprite.Update(time);
 		}
 		applied *= accel;
 		// only moving if they are slower than max speed (breaks with diagonals)
@@ -119,7 +123,53 @@ public class Player : Entity {
 	}
 	public override void Draw(GameCamera cam) {
 		camera = cam;
-		fishing.Draw(cam);
-		sprite.Draw(cam, bounds);
+
+		lureSprite.Draw(cam, fishing.lureBounds);
+
+		if (InputHandler.GetButton("A").Held) {
+			rodSprite.frame = getRodFrame();
+			rodSprite.Draw(cam, bounds.Centre);
+		}
+		else {
+			paddleSprite.Draw(cam, bounds.Centre);
+
+		}
+		cam.DrawLine(getRodLoc(), fishing.lureBounds.Centre, Globals.palette[9]);
+
+	}
+	private int getRodFrame() {
+		if (InputHandler.GetButton("D").Held) {
+			if (InputHandler.GetButton("L").Held) {
+				return 0;
+			}
+			else if (InputHandler.GetButton("R").Held) {
+				return 2;
+			}
+			else {
+				return 1;
+			}
+		}
+		// facing up
+		if (InputHandler.GetButton("U").Held) {
+			if (InputHandler.GetButton("L").Held) {
+				return 5;
+			}
+			else if (InputHandler.GetButton("R").Held) {
+				return 3;
+			}
+			else {
+				return 4;
+			}
+		}
+		return 6;
+	}
+	private Vector2 getRodLoc() {
+		if (fishing.castState == CastState.Idle) {
+			return fishing.lureBounds.Centre;
+		}
+		Vector2 offset = new(0, -10);
+		return bounds.Centre + offset;
+
+
 	}
 }

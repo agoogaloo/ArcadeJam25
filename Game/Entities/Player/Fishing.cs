@@ -10,7 +10,6 @@ public class Fishing {
 	float maxTension = 1f, dragFact = 0.85f, lureWeight = 0.05f;
 	string[] reelInputs = ["U", "R", "D", "L"];
 
-	Sprite lureSprite = new(Assets.lure);
 	public Rect lureBounds { get; private set; } = new(0, 0, 5, 5);
 	public Rect playerBounds { get; private set; }
 	Vector2 playerVel;
@@ -115,7 +114,7 @@ public class Fishing {
 	}
 
 	private void DoLinePhysics() {
-		Vector2 lenVec = playerBounds.Centre - lureBounds.Centre;
+		Vector2 lenVec = playerBounds.Centre + new Vector2(0, -9) - lureBounds.Centre;
 		lineLen -= (lineLen - targetLen) * lineLenFact;
 		maxTension = 10;
 		// make sure you dont get seperated by more than the line length
@@ -143,11 +142,6 @@ public class Fishing {
 			lineWeight = fish.weight;
 			castState = CastState.Bite;
 		}
-	}
-
-	public void Draw(GameCamera cam) {
-		cam.DrawLine(playerBounds.Centre, lureBounds.Centre, Globals.palette[9]);
-		lureSprite.Draw(cam, lureBounds);
 	}
 }
 

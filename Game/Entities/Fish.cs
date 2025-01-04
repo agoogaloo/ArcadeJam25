@@ -9,7 +9,7 @@ namespace ArcadeJam.Entities;
 public class Fish : Entity {
 
 	float fightSpeed = 2f, idleSpeed = 1;
-	public float weight { get; private set; } = 0.8f;
+	public float weight { get; private set; } = 0.3f;
 	Fishing? bitLure;
 
 	public Rect bounds = new(0, 0, 5, 5);
@@ -34,12 +34,10 @@ public class Fish : Entity {
 		if (bitLure != null) {
 			fight(bitLure);
 		}
-
 	}
 
-
 	private void seeLure(Fishing lure) {
-		if (bitLure != null) {
+		if (bitLure != null || lure.castState == CastState.Bite) {
 			return;
 		}
 		Vector2 displacement = lure.lureBounds.Centre - bounds.Centre;

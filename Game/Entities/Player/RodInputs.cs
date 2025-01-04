@@ -21,7 +21,7 @@ public class RodInputs {
 	public void Update(double time) {
 		// if you are holding the fishing rod check for casting input stuff
 		holdingRod = InputHandler.GetButton("A").Held || fishing.castState == CastState.Casting;
-		inputTime = 1;
+		inputTime = 0.3f;
 		if (holdingRod) {
 			//idk
 			if (!InputHandler.GetButton("U").Held) {
@@ -39,10 +39,6 @@ public class RodInputs {
 				}
 			}
 		}
-		castTimer = Math.Max(0, castTimer - (float)time);
-		backTimer = Math.Max(0, backTimer - (float)time);
-		leftTimer = Math.Max(0, leftTimer - (float)time);
-		rightTimer = Math.Max(0, rightTimer - (float)time);
 
 		if (InputHandler.GetButton("A").JustReleased && castTimer > 0 && InputHandler.GetButton("U").Held) {
 			DoCast();
@@ -53,18 +49,25 @@ public class RodInputs {
 
 		}
 
+		castTimer = Math.Max(0, castTimer - (float)time);
+		backTimer = Math.Max(0, backTimer - (float)time);
+		leftTimer = Math.Max(0, leftTimer - (float)time);
+		rightTimer = Math.Max(0, rightTimer - (float)time);
 	}
+
 	private void DoCast() {
 		// if its angled to the right
+		float performance = (castTimer + backTimer * 1.5f) / inputTime;
+		Console.WriteLine("casting perf:" + performance);
 		if (InputHandler.GetButton("R").Held) {
 			if (leftTimer != 0) {
 				return;
 			}
 			else if (rightTimer > 0) {
-				fishing.Cast(5 + castTimer * 2 + backTimer * 20, 10);
+				fishing.Cast(performance, 30);
 			}
 			else {
-				fishing.Cast(5 + castTimer * 2 + backTimer * 20, 2);
+				fishing.Cast(performance, 15);
 
 			}
 		}
@@ -74,15 +77,15 @@ public class RodInputs {
 				return;
 			}
 			else if (leftTimer > 0) {
-				fishing.Cast(5 + castTimer * 2 + backTimer * 20, -10);
+				fishing.Cast(performance, -30);
 			}
 			else {
-				fishing.Cast(5 + castTimer * 2 + backTimer * 20, -2);
+				fishing.Cast(performance, -15);
 			}
 		}
 		// otherwise its straight
 		else {
-			fishing.Cast(5 + castTimer * 2 + backTimer * 20);
+			fishing.Cast(performance);
 		}
 	}
 }

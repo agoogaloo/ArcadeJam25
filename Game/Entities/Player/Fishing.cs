@@ -3,6 +3,7 @@ using System.Numerics;
 using YarEngine.Graphics;
 using YarEngine.Inputs;
 using YarEngine.Physics;
+using YarEngine.Utils;
 
 namespace ArcadeJam.Entities;
 public class Fishing {
@@ -76,8 +77,13 @@ public class Fishing {
 
 	}
 
-	public void Cast(float strength, float angle = 0) {
-		lureVel = new(angle, -strength);
+	public void Cast(float performance, float angle = 0) {
+		float strength = 5 + performance * 5;
+
+		angle *= MathF.PI / 180;//converting to radians
+		float x = MathF.Sin(angle) * strength;
+		float y = -MathF.Cos(angle) * strength;
+		lureVel = new(x, y);
 		castState = CastState.Casting;
 		reelIndex = -1;
 	}

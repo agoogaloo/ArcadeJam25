@@ -8,7 +8,8 @@ namespace ArcadeJam.Entities;
 
 public class Fish : Entity {
 
-	float speed = 2, weight = 0.2f;
+	float speed = 2;
+	public float weight { get; private set; } = 0.9f;
 	bool bitLure = false;
 
 	Rect bounds = new(0, 0, 5, 5);

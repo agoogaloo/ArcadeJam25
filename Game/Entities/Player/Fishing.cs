@@ -3,11 +3,11 @@ using System.Numerics;
 using YarEngine.Graphics;
 using YarEngine.Inputs;
 using YarEngine.Physics;
-using YarEngine.Utils;
 
 namespace ArcadeJam.Entities;
+
 public class Fishing {
-	float maxRelease = 0.5f, dragFact = 0.85f;
+	float maxRelease = 0.5f, dragFact = 0.85f, lureWeight = 0.05f;
 	string[] reelInputs = ["U", "R", "D", "L"];
 
 	Sprite lureSprite = new(Assets.lure);
@@ -21,7 +21,7 @@ public class Fishing {
 	Collider<Fishing> collider;
 	Fish? bitFish;
 	float lineLen = 0, targetLen = 0, lineLenFact = 0.2f;
-	float lureWeight = 0.05f;
+	float lineWeight = 0.05f;
 
 	float castTimer = 0;
 
@@ -37,7 +37,6 @@ public class Fishing {
 	}
 
 	public Vector2 Update(double time) {
-		Vector2 lenVec = playerBounds.Centre - lureBounds.Centre;
 		inputs.Update(time);
 
 		switch (castState) {
@@ -46,7 +45,9 @@ public class Fishing {
 				break;
 
 			case CastState.Casting:
+				Vector2 lenVec = playerBounds.Centre - lureBounds.Centre;
 				lureVel *= dragFact;
+				lineWeight = lureWeight;
 				lureBounds.Centre += lureVel;
 				if (lureVel.Length() <= 0.5 || InputHandler.GetButton("A").JustPressed) {
 					castState = CastState.Cast;
@@ -59,18 +60,20 @@ public class Fishing {
 			case CastState.Cast:
 				// shorten the line if your reeling
 				Reel();
-				lineLen -= (lineLen - targetLen) * lineLenFact;
-				// finish fishing if your done reeling
 				if (lineLen <= 1) {
 					castState = CastState.Idle;
 					collider.Remove();
 				}
-				// make sure you dont get seperated by more than the line length
-				if (lenVec.Length() > lineLen) {
-					Vector2 neededMove = lenVec * ((lenVec.Length() / lineLen) - 1);
-					lureBounds.Centre += neededMove * (1 - lureWeight);
-					playerBounds.Centre -= neededMove * lureWeight;
+				DoLinePhysics();
+				break;
+			case CastState.Bite:
+				Reel();
+				if (lineLen <= 1) {
+					castState = CastState.Idle;
+					bitFish.shouldRemove = true;
+					collider.Remove();
 				}
+				DoLinePhysics();
 				break;
 		}
 		return Vector2.Zero;
@@ -110,9 +113,21 @@ public class Fishing {
 		reelIndex %= reelInputs.Length;
 	}
 
+	private void DoLinePhysics() {
+		Vector2 lenVec = playerBounds.Centre - lureBounds.Centre;
+		lineLen -= (lineLen - targetLen) * lineLenFact;
+		// make sure you dont get seperated by more than the line length
+		if (lenVec.Length() > lineLen) {
+			Vector2 neededMove = lenVec * ((lenVec.Length() / lineLen) - 1);
+			lureBounds.Centre += neededMove * (1 - lineWeight);
+			playerBounds.Centre -= neededMove * lineWeight;
+		}
+
+	}
 	public void Bite(Fish fish) {
 		if (castState == CastState.Cast || castState == CastState.Bite) {
 			bitFish = fish;
+			lineWeight = fish.weight;
 			castState = CastState.Bite;
 		}
 	}

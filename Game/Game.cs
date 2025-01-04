@@ -58,7 +58,7 @@ public class Game {
 
 		//adding all the base game components
 		EntityManager.QueueEntity(new Player());
-		/*EntityManager.QueueEntity(new Fish(new(50, 50)));*/
+		EntityManager.QueueEntity(new Fish(new(50, 50)));
 
 		GameBase.Run();
 

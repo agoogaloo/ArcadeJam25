@@ -60,25 +60,10 @@ public class Player : Entity {
 		}
 		fishing.Update(updateTime);
 		bounds.Centre += vel;
-		MoveCam(updateTime);
 		LockToScreen();
 		collision.Update(updateTime);
 
 	}
-	private void MoveCam(double time) {
-		if (camera == null) {
-			return;
-		}
-		if (fishing.castState == CastState.Bite && fishing.bitFish != null) {
-			// scroll camera with the fish
-			camera.offset.Y = MathF.Min(camera.offset.Y, fishing.bitFish.bounds.Centre.Y - 20);
-		}
-		else {
-			camera.offset.Y -= camSpeed;
-
-		}
-	}
-
 
 	private void paddle(float time) {
 		//input vector

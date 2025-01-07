@@ -10,6 +10,7 @@ namespace ArcadeJam;
 
 public class Game {
 
+	Levels levels;
 	public static void Run() {
 		//setting up raylib/engine stuff
 		SaveManager.savePath = "res/saves/save.txt";
@@ -59,6 +60,7 @@ public class Game {
 
 		SaveManager.SaveData<string>("version", "v0.0");
 
+		Globals.levels = new(gameCam);
 		//adding all the base game components
 		EntityManager.QueueEntity(new Player());
 		EntityManager.QueueEntity(new Fish(new(50, 50)));
@@ -69,6 +71,7 @@ public class Game {
 	}
 	private static void Update(float time) {
 		EntityManager.Update(time);
+		Globals.levels.Update(time);
 		//switching fullscreen/scaling modes
 		if (Raylib.IsKeyPressed(KeyboardKey.F1)) {
 			switch (GameBase.FullScreen) {

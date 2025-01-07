@@ -9,4 +9,5 @@ class Globals {
 				 new(184, 45, 70, 255), new(223, 128, 62,255),
 				 new(226, 165, 96,255),new(237, 206, 94,255) ];
 	public static UI ui = new();
+	public static Levels levels;
 }

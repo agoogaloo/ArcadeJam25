@@ -81,6 +81,7 @@ public class Fishing {
 
 		lureBounds.Centre = bitFish.bounds.Centre;
 		Reel();
+		Globals.levels.FishScroll(bitFish.bounds.Centre);
 		if (lineLen <= 0.2) {
 			castState = CastState.Idle;
 			bitFish.Catch();

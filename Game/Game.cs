@@ -30,7 +30,7 @@ public class Game {
 
 		//creating the camera
 		GameCamera gameCam = new(GameBase.GameSize);
-		/*gameCam.offset.X = -55;*/
+		gameCam.screenSize.X -= Assets.ui.Width;
 
 		//setting the key/controller bindings
 		InputHandler.AddButtonBind("L", KeyboardKey.Left);
@@ -56,11 +56,13 @@ public class Game {
 		GameBase.pixelDraw = PixelDraw;
 		GameBase.gameCam = gameCam;
 
+
 		SaveManager.SaveData<string>("version", "v0.0");
 
 		//adding all the base game components
 		EntityManager.QueueEntity(new Player());
 		EntityManager.QueueEntity(new Fish(new(50, 50)));
+		EntityManager.QueueEntity(new Obstacle(new(100, 75)));
 
 		GameBase.Run();
 
@@ -88,5 +90,6 @@ public class Game {
 	private static void PixelDraw(GameCamera gameCam) {
 		Raylib.ClearBackground(Globals.palette[2]);
 		EntityManager.Draw(gameCam);
+		Globals.ui.Draw(gameCam);
 	}
 }

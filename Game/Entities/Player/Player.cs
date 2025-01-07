@@ -10,31 +10,27 @@ namespace ArcadeJam.Entities;
 
 public class Player : Entity {
 
-
 	float accel = 0.4f, maxSpeed = 2.0f, friction = 0.1f;
-	Rect bounds = new(10, 10, 3, 6);
-	Vector2 vel = new(0, 0);
+
 	Sprite rodSprite = new(Assets.playerRod, 7);
 	Sprite rollSprite = new(Assets.playerRoll, 3);
 	Sprite paddleSprite = new(Assets.playerPaddle, 4, new(0.5f, 0));
 	Sprite lureSprite = new(Assets.lure);
+
+	Rect bounds = new(10, 10, 3, 6);
+	public Vector2 vel = new(0, 0);
 	Fishing fishing;
-	Collider<Player> collider;
+	PlayerCollision collision;
 	GameCamera? camera;
 
 	bool holdingRod = false, lockMove = false;
-	float inputTime = 0.3f;
-	public float castTimer { get; private set; } = 0;
-	public float backTimer { get; private set; } = 0;
-	public float leftTimer { get; private set; } = 0;
-	public float rightTimer { get; private set; } = 0;
 
 	public Player() {
 		paddleSprite.frameDelay = 0.1;
 		fishing = new(bounds, vel);
-		collider = new(bounds, this);
+		collision = new(bounds, this);
 		GameBase.debugScreen.RegisterModule(delegate {
-			return new PlayerInfoMod(this, fishing);
+			return new PlayerInfoMod(this, fishing, collision);
 		});
 	}
 
@@ -60,9 +56,10 @@ public class Player : Entity {
 			paddle((float)updateTime);
 		}
 		fishing.Update(updateTime);
-
 		bounds.Centre += vel;
 		LockToScreen();
+		collision.Update(updateTime);
+
 	}
 
 
@@ -105,14 +102,15 @@ public class Player : Entity {
 	}
 
 	private void LockToScreen() {
+		int uiWidth = Assets.ui.Width;
 		if (camera == null) {
 			return;
 		}
-		if (bounds.X < camera.offset.X) {
-			bounds.X = camera.offset.X;
+		if (bounds.X < camera.offset.X + uiWidth) {
+			bounds.X = camera.offset.X + uiWidth;
 		}
-		if (bounds.X + bounds.Width > camera.offset.X + camera.screenSize.X) {
-			bounds.X = camera.offset.X + camera.screenSize.X - bounds.Width;
+		if (bounds.X + bounds.Width > camera.offset.X + camera.screenSize.X + uiWidth) {
+			bounds.X = camera.offset.X + camera.screenSize.X - bounds.Width + uiWidth;
 		}
 		if (bounds.Y < camera.offset.Y) {
 			bounds.Y = camera.offset.Y;

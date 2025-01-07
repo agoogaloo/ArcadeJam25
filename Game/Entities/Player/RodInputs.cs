@@ -28,7 +28,7 @@ public class RodInputs {
 				castTimer = inputTime;
 			}
 			if (InputHandler.GetButton("D").Held) {
-				backTimer = inputTime / 2;
+				backTimer = inputTime;
 				if (InputHandler.GetButton("R").Held) {
 					leftTimer = inputTime;
 					rightTimer = 0;
@@ -57,8 +57,8 @@ public class RodInputs {
 
 	private void DoCast() {
 		// if its angled to the right
-		float performance = (castTimer + backTimer * 1.5f) / inputTime;
-		Console.WriteLine("casting perf:" + performance);
+		float performance = (castTimer + backTimer * 0.5f) / inputTime;
+		Console.WriteLine("casting perf:" + performance + " casttime:" + castTimer + " backTime:" + backTimer);
 		if (InputHandler.GetButton("R").Held) {
 			if (leftTimer != 0) {
 				return;

@@ -17,8 +17,9 @@ public class Fishing {
 	public CastState castState { get; private set; } = CastState.Idle;
 	Vector2 lureVel;
 	public RodInputs inputs { get; private set; }
+	Sprite reelSprite;
 	Collider<Fishing> collider;
-	Fish? bitFish;
+	public Fish? bitFish { get; private set; }
 	float lineLen = 0, targetLen = 0, lineLenFact = 0.2f;
 	float lineWeight = 0.05f;
 
@@ -27,15 +28,16 @@ public class Fishing {
 	int reelIndex = 0;
 
 
-	public Fishing(Rect pBounds, Vector2 pVel) {
+	public Fishing(Rect pBounds, Vector2 pVel, Sprite reelSprite) {
 		playerBounds = pBounds;
+		this.reelSprite = reelSprite;
 		playerVel = pVel;
 		collider = new(lureBounds, this);
 		collider.Remove();
 		inputs = new(this);
 	}
 
-	public Vector2 Update(double time) {
+	public void Update(double time) {
 		inputs.Update(time);
 
 		switch (castState) {
@@ -66,17 +68,26 @@ public class Fishing {
 				DoLinePhysics();
 				break;
 			case CastState.Bite:
-				lureBounds.Centre = bitFish.bounds.Centre;
-				Reel();
-				if (lineLen <= 0.2) {
-					castState = CastState.Idle;
-					bitFish.Catch();
-					collider.Remove();
-				}
-				DoLinePhysics();
+				biteUpdate(time);
 				break;
 		}
-		return Vector2.Zero;
+		return;
+
+	}
+	private void biteUpdate(double time) {
+		if (bitFish == null) {
+			return;
+		}
+
+		lureBounds.Centre = bitFish.bounds.Centre;
+		Reel();
+		if (lineLen <= 0.2) {
+			castState = CastState.Idle;
+			bitFish.Catch();
+			collider.Remove();
+			bitFish = null;
+		}
+		DoLinePhysics();
 
 	}
 
@@ -108,7 +119,9 @@ public class Fishing {
 		}
 		if (InputHandler.GetButton(reelInputs[reelIndex]).JustPressed) {
 			reelIndex++;
-			targetLen = Math.Max(0.1f, targetLen - 5f);
+			targetLen = Math.Max(0, targetLen - 3f);
+			reelSprite.Update(2);
+
 		}
 		reelIndex %= reelInputs.Length;
 	}

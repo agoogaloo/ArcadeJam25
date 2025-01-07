@@ -11,6 +11,7 @@ public class Assets {
 
 	public static Texture2D playerPaddle = Raylib.LoadTexture("res/textures/playerPaddle.png");
 	public static Texture2D playerRod = Raylib.LoadTexture("res/textures/playerRod.png");
+	public static Texture2D playerReel = Raylib.LoadTexture("res/textures/playerReel.png");
 	public static Texture2D playerRoll = Raylib.LoadTexture("res/textures/playerRoll.png");
 	public static Texture2D lure = Raylib.LoadTexture("res/textures/lure.png");
 

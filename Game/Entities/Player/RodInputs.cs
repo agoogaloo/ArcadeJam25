@@ -40,7 +40,7 @@ public class RodInputs {
 			}
 		}
 
-		if (InputHandler.GetButton("A").JustReleased && castTimer > 0 && InputHandler.GetButton("U").Held) {
+		if (fishing.castState == CastState.Idle && InputHandler.GetButton("A").JustReleased && castTimer > 0 && InputHandler.GetButton("U").Held) {
 			DoCast();
 
 			if (!holdingRod) {

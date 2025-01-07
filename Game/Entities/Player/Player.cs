@@ -1,5 +1,6 @@
 
 using System.Numerics;
+using Raylib_cs;
 using YarEngine;
 using YarEngine.Entities;
 using YarEngine.Graphics;
@@ -10,10 +11,11 @@ namespace ArcadeJam.Entities;
 
 public class Player : Entity {
 
-	float accel = 0.4f, maxSpeed = 2.0f, friction = 0.1f;
+	float accel = 0.4f, maxSpeed = 2.0f, friction = 0.1f, camSpeed = 0.0f;
 
 	Sprite rodSprite = new(Assets.playerRod, 7);
 	Sprite rollSprite = new(Assets.playerRoll, 3);
+	Sprite reelSprite = new(Assets.playerReel, 4);
 	Sprite paddleSprite = new(Assets.playerPaddle, 4, new(0.5f, 0));
 	Sprite lureSprite = new(Assets.lure);
 
@@ -27,7 +29,8 @@ public class Player : Entity {
 
 	public Player() {
 		paddleSprite.frameDelay = 0.1;
-		fishing = new(bounds, vel);
+		reelSprite.frameDelay = 1;
+		fishing = new(bounds, vel, reelSprite);
 		collision = new(bounds, this);
 		GameBase.debugScreen.RegisterModule(delegate {
 			return new PlayerInfoMod(this, fishing, collision);
@@ -57,9 +60,23 @@ public class Player : Entity {
 		}
 		fishing.Update(updateTime);
 		bounds.Centre += vel;
+		MoveCam(updateTime);
 		LockToScreen();
 		collision.Update(updateTime);
 
+	}
+	private void MoveCam(double time) {
+		if (camera == null) {
+			return;
+		}
+		if (fishing.castState == CastState.Bite && fishing.bitFish != null) {
+			// scroll camera with the fish
+			camera.offset.Y = MathF.Min(camera.offset.Y, fishing.bitFish.bounds.Centre.Y - 20);
+		}
+		else {
+			camera.offset.Y -= camSpeed;
+
+		}
 	}
 
 
@@ -124,15 +141,21 @@ public class Player : Entity {
 
 		lureSprite.Draw(cam, fishing.lureBounds);
 
-		if (InputHandler.GetButton("A").Held) {
-			rodSprite.frame = getRodFrame();
-			rodSprite.Draw(cam, bounds.Centre);
-		}
-		else {
-			paddleSprite.Draw(cam, bounds.Centre);
-
-		}
+		CurrentSprite().Draw(cam, bounds.Centre);
 		cam.DrawLine(getRodLoc(), fishing.lureBounds.Centre, Globals.palette[9]);
+
+	}
+	private Sprite CurrentSprite() {
+		if (InputHandler.GetButton("A").Held) {
+			if (fishing.castState == CastState.Cast || fishing.castState == CastState.Bite) {
+				return reelSprite;
+			}
+
+			rodSprite.frame = getRodFrame();
+			return rodSprite;
+		}
+		return paddleSprite;
+
 
 	}
 	private int getRodFrame() {

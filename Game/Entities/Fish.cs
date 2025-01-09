@@ -6,7 +6,7 @@ using YarEngine.Physics;
 
 namespace ArcadeJam.Entities;
 
-public class Fish : Entity {
+public class Fish : Entity, ScrollObj {
 
 	float fightSpeed = 2f, idleSpeed = 1;
 	public float weight { get; private set; } = 0.3f;
@@ -70,5 +70,8 @@ public class Fish : Entity {
 		vision.Remove();
 	}
 
+	public void scroll(float dist) {
+		bounds.Y += dist * 0.8f;
+	}
 }
 

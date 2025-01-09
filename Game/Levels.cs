@@ -8,44 +8,51 @@ namespace ArcadeJam;
 
 public class Levels {
 	GameCamera camera;
-	float camSpeed = 0.1f, distanceCount = 0;
+	float curentSpeed = 3f, levelBuffDist = 0;
 	bool fishBit = false;
+	List<ScrollObj> staticEntities = new();
 
 
 	public Levels(GameCamera camera) {
 		this.camera = camera;
+		Player p = new();
+		staticEntities.Add(p);
+		EntityManager.QueueEntity(p);
 	}
 
+
 	public void Update(double time) {
-		if (fishBit) {
-			fishBit = false;
-			return;
+		float scrollDist = (float)(curentSpeed * time);
+		foreach (ScrollObj o in staticEntities) {
+			o.scroll(scrollDist);
 		}
-		camera.offset.Y -= camSpeed;
-		distanceCount += camSpeed;
-		if (distanceCount > 5) {
-			distanceCount = 0;
-			spawnElem();
+		levelBuffDist -= scrollDist;
+		if (levelBuffDist <= 0) {
+			spawnSection();
 		}
 
 	}
 	public void FishScroll(Vector2 fishBounds) {
 		float oldY = camera.offset.Y;
 		camera.offset.Y = MathF.Min(camera.offset.Y, fishBounds.Y - 20);
-		distanceCount += oldY - camera.offset.Y;
-		if (distanceCount > 5) {
-			distanceCount = 0;
-			spawnElem();
-		}
-		fishBit = true;
+		levelBuffDist -= oldY - camera.offset.Y;
 	}
-	private void spawnElem() {
+	private void spawnSection() {
+		levelBuffDist = 10;
+
 		int x = Random.Shared.Next() % (int)camera.screenSize.X;
+
 		if (Random.Shared.Next() % 2 == 0) {
-			EntityManager.QueueEntity(new Fish(new(x, camera.offset.Y)));
+			Fish f = new Fish(new(x, camera.offset.Y));
+			EntityManager.QueueEntity(f);
+			staticEntities.Add(f);
 			return;
+
 		}
-		EntityManager.QueueEntity(new Obstacle(new(x, camera.offset.Y)));
+
+		Obstacle o = new Obstacle(new(x, camera.offset.Y));
+		EntityManager.QueueEntity(o);
+		staticEntities.Add(o);
 
 	}
 }

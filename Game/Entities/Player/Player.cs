@@ -8,7 +8,7 @@ using YarEngine.Physics;
 
 namespace ArcadeJam.Entities;
 
-public class Player : Entity {
+public class Player : Entity, ScrollObj {
 
 	float accel = 0.3f, maxSpeed = 1.7f, friction = 0.1f, camSpeed = 0.0f, rollDelay = 0.5f;
 
@@ -180,5 +180,9 @@ public class Player : Entity {
 		return bounds.Centre + offset;
 
 
+	}
+
+	public void scroll(float dist) {
+		bounds.Y += dist * 0.3f;
 	}
 }

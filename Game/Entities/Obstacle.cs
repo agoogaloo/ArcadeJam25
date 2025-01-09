@@ -6,7 +6,7 @@ using YarEngine.Physics;
 
 namespace ArcadeJam.Entities;
 
-public class Obstacle : Entity {
+public class Obstacle : Entity, ScrollObj {
 
 	Sprite sprite = new(Assets.obstacle);
 	Rect bounds = new(0, 0, 9, 11);
@@ -27,5 +27,8 @@ public class Obstacle : Entity {
 
 		Vector2 bounceDir = Vector2.Normalize(p.Bounds.Centre - bounds.Centre);
 		p.collisionObject.Damage(bounceDir * 1.5f);
+	}
+	public void scroll(float dist) {
+		bounds.Y += dist;
 	}
 }

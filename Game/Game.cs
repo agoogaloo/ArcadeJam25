@@ -61,11 +61,6 @@ public class Game {
 		SaveManager.SaveData<string>("version", "v0.0");
 
 		Globals.levels = new(gameCam);
-		//adding all the base game components
-		EntityManager.QueueEntity(new Player());
-		EntityManager.QueueEntity(new Fish(new(50, 50)));
-		EntityManager.QueueEntity(new Obstacle(new(100, 75)));
-
 		GameBase.Run();
 
 	}

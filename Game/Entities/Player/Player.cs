@@ -1,6 +1,5 @@
 
 using System.Numerics;
-using Raylib_cs;
 using YarEngine;
 using YarEngine.Entities;
 using YarEngine.Graphics;
@@ -11,10 +10,10 @@ namespace ArcadeJam.Entities;
 
 public class Player : Entity {
 
-	float accel = 0.4f, maxSpeed = 2.0f, friction = 0.1f, camSpeed = 0.0f;
+	float accel = 0.3f, maxSpeed = 1.7f, friction = 0.1f, camSpeed = 0.0f, rollDelay = 0.5f;
 
 	Sprite rodSprite = new(Assets.playerRod, 7);
-	Sprite rollSprite = new(Assets.playerRoll, 3);
+	Sprite rollSprite = new(Assets.playerRoll, 4);
 	Sprite reelSprite = new(Assets.playerReel, 4);
 	Sprite paddleSprite = new(Assets.playerPaddle, 4, new(0.5f, 0));
 	Sprite lureSprite = new(Assets.lure);
@@ -25,21 +24,23 @@ public class Player : Entity {
 	PlayerCollision collision;
 	GameCamera? camera;
 
-	bool holdingRod = false, lockMove = false;
+	bool holdingRod = false, lockMove = false, rolling = false;
+	float rollTimer = 0;
 
 	public Player() {
 		paddleSprite.frameDelay = 0.1;
+
+		rollSprite.frameDelay = 0.1;
+		rollSprite.loop = false;
 		reelSprite.frameDelay = 1;
 		fishing = new(bounds, vel, reelSprite);
-		collision = new(bounds, this);
+		collision = new(bounds, rollSprite, this);
 		GameBase.debugScreen.RegisterModule(delegate {
 			return new PlayerInfoMod(this, fishing, collision);
 		});
 	}
 
 	public override void Update(double updateTime) {
-		Sprite paddleSprite = new(Assets.playerPaddle, 4, new(1, 0));
-		paddleSprite.frameDelay = 0.1;
 		//friction
 		if (vel.X > 0) {
 			vel.X -= MathF.Min(friction, vel.X);
@@ -62,7 +63,6 @@ public class Player : Entity {
 		bounds.Centre += vel;
 		LockToScreen();
 		collision.Update(updateTime);
-
 	}
 
 	private void paddle(float time) {
@@ -131,6 +131,9 @@ public class Player : Entity {
 
 	}
 	private Sprite CurrentSprite() {
+		if (collision.rolling) {
+			return rollSprite;
+		}
 		if (InputHandler.GetButton("A").Held) {
 			if (fishing.castState == CastState.Cast || fishing.castState == CastState.Bite) {
 				return reelSprite;

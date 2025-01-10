@@ -86,8 +86,9 @@ public class Game {
 		}
 	}
 	private static void PixelDraw(GameCamera gameCam) {
-		Raylib.ClearBackground(Globals.palette[2]);
+		Raylib.ClearBackground(Globals.palette[3]);
 		EntityManager.Draw(gameCam);
+		Globals.levels.Draw(gameCam);
 		Globals.ui.Draw(gameCam);
 	}
 }

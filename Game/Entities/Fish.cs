@@ -16,24 +16,26 @@ public class Fish : Entity, ScrollObj {
 	Circle visionShape = new(0, 0, 15);
 	Collider<Fish> collision;
 	Collider<Fish> vision;
-	Sprite sprite = new(Assets.fish);
+	Sprite sprite = new(Assets.smallFish, 2);
 
 
 
 	public Fish(Vector2 start) {
+		sprite.frameDelay = 0.2;
 		bounds.Centre = start;
 		collision = new(bounds, this);
 		vision = new(visionShape, this, "vision");
 
 	}
 
-	public override void Update(double updateTime) {
+	public override void Update(double time) {
 		vision.DoCollision<Fishing>(seeLure);
 		collision.DoCollision<Fishing>(hitLure);
 		visionShape.Centre = bounds.Centre;
 		if (bitLure != null) {
 			fight(bitLure);
 		}
+		sprite.Update(time);
 	}
 
 	private void seeLure(Fishing lure) {

@@ -11,11 +11,13 @@ public class Levels {
 	float curentSpeed = 3f, levelBuffDist = 0;
 	bool fishBit = false;
 	List<ScrollObj> staticEntities = new();
+	Tutorial tut;
 
 
 	public Levels(GameCamera camera) {
 		this.camera = camera;
 		Player p = new();
+		tut = new(p);
 		staticEntities.Add(p);
 		EntityManager.QueueEntity(p);
 	}
@@ -30,7 +32,10 @@ public class Levels {
 		if (levelBuffDist <= 0) {
 			spawnSection();
 		}
-
+		tut.Update(time);
+	}
+	public void Draw(GameCamera cam) {
+		tut.Draw(cam);
 	}
 	public void FishScroll(Vector2 fishBounds) {
 		float oldY = camera.offset.Y;

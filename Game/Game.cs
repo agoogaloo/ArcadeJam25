@@ -32,6 +32,7 @@ public class Game {
 		//creating the camera
 		GameCamera gameCam = new(GameBase.GameSize);
 		gameCam.screenSize.X -= Assets.ui.Width;
+		gameCam.offset.X -= Assets.ui.Width;
 
 		//setting the key/controller bindings
 		InputHandler.AddButtonBind("L", KeyboardKey.Left);

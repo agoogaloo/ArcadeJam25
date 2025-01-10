@@ -28,10 +28,10 @@ public class Tutorial {
 		else if (player.fishing.castState != CastState.Casting && player.fishing.castState != CastState.Cast) {
 			if (InputHandler.GetButton("A").Held) {
 
-				Raylib.DrawTexture(Assets.castTut, 75, 20, Color.White);
+				Raylib.DrawTexture(Assets.castTut, 33 + 84 - Assets.castTut.Width / 2, 20, Color.White);
 			}
 			else {
-				Raylib.DrawTexture(Assets.rodTut, 75, 20, Color.White);
+				Raylib.DrawTexture(Assets.rodTut, 33 + 84 - Assets.rodTut.Width / 2, 20, Color.White);
 
 			}
 		}

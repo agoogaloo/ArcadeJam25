@@ -18,7 +18,7 @@ public class Player : Entity, ScrollObj {
 	Sprite paddleSprite = new(Assets.playerPaddle, 4, new(0.5f, 0));
 	Sprite lureSprite = new(Assets.lure);
 
-	public Rect bounds { get; private set; } = new(10, 10, 3, 6);
+	public Rect bounds { get; private set; } = new(83, 100, 3, 6);
 	public Vector2 vel = new(0, 0);
 	public Fishing fishing { get; private set; }
 	PlayerCollision collision;

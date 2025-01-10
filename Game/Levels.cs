@@ -8,10 +8,10 @@ namespace ArcadeJam;
 
 public class Levels {
 	GameCamera camera;
-	float curentSpeed = 3f, levelBuffDist = 0;
-	bool fishBit = false;
+	float curentSpeed = 0, levelBuffDist = 10;
 	List<ScrollObj> staticEntities = new();
 	Tutorial tut;
+	private bool inTut = true;
 
 
 	public Levels(GameCamera camera) {
@@ -20,6 +20,7 @@ public class Levels {
 		tut = new(p);
 		staticEntities.Add(p);
 		EntityManager.QueueEntity(p);
+		spawnIntro();
 	}
 
 
@@ -32,10 +33,14 @@ public class Levels {
 		if (levelBuffDist <= 0) {
 			spawnSection();
 		}
-		tut.Update(time);
+		if (inTut) {
+			tut.Update(time);
+		}
 	}
 	public void Draw(GameCamera cam) {
-		tut.Draw(cam);
+		if (inTut) {
+			tut.Draw(cam);
+		}
 	}
 	public void FishScroll(Vector2 fishBounds) {
 		float oldY = camera.offset.Y;
@@ -59,5 +64,16 @@ public class Levels {
 		EntityManager.QueueEntity(o);
 		staticEntities.Add(o);
 
+	}
+
+	private void spawnIntro() {
+		TutFish f = new(new(83, 70));
+		EntityManager.QueueEntity(f);
+		staticEntities.Add(f);
+	}
+
+	public void endTut() {
+		inTut = false;
+		curentSpeed += 3f;
 	}
 }

@@ -8,15 +8,16 @@ namespace ArcadeJam.Entities;
 
 public class Fish : Entity, ScrollObj {
 
-	float fightSpeed = 2f, idleSpeed = 1;
-	public float weight { get; private set; } = 0.3f;
-	Fishing? bitLure;
+	protected float fightSpeed = 2f, idleSpeed = 1;
+	public float weight { get; protected set; } = 0.3f;
+	protected Fishing? bitLure;
 
 	public Rect bounds = new(0, 0, 5, 5);
-	Circle visionShape = new(0, 0, 15);
-	Collider<Fish> collision;
-	Collider<Fish> vision;
-	Sprite sprite = new(Assets.smallFish, 2);
+	protected Circle visionShape = new(0, 0, 15);
+	protected Collider<Fish> collision;
+	protected Collider<Fish> vision;
+	protected Sprite sprite = new(Assets.smallFish, 2);
+
 
 
 
@@ -29,16 +30,21 @@ public class Fish : Entity, ScrollObj {
 	}
 
 	public override void Update(double time) {
+		idleMove(time);
 		vision.DoCollision<Fishing>(seeLure);
 		collision.DoCollision<Fishing>(hitLure);
 		visionShape.Centre = bounds.Centre;
 		if (bitLure != null) {
 			fight(bitLure);
 		}
+
 		sprite.Update(time);
 	}
+	protected virtual void idleMove(double time) {
 
-	private void seeLure(Fishing lure) {
+	}
+
+	protected virtual void seeLure(Fishing lure) {
 		if (bitLure != null || lure.castState == CastState.Bite) {
 			return;
 		}
@@ -48,7 +54,7 @@ public class Fish : Entity, ScrollObj {
 		}
 		bounds.Centre += displacement;
 	}
-	private void fight(Fishing lure) {
+	protected virtual void fight(Fishing lure) {
 		Vector2 direction = lure.playerBounds.Centre - bounds.Centre;
 		if (direction == Vector2.Zero) {
 			direction = new(0, 1);
@@ -57,7 +63,10 @@ public class Fish : Entity, ScrollObj {
 		bounds.Centre += direction * fightSpeed;
 	}
 
-	private void hitLure(Fishing lure) {
+	protected virtual void hitLure(Fishing lure) {
+		if (lure.castState == CastState.Bite) {
+			return;
+		}
 		bitLure = lure;
 		lure.Bite(this);
 	}
@@ -66,13 +75,13 @@ public class Fish : Entity, ScrollObj {
 		sprite.Draw(cam, bounds.Centre);
 	}
 
-	public void Catch() {
+	public virtual void Catch() {
 		shouldRemove = true;
 		collision.Remove();
 		vision.Remove();
 	}
 
-	public void scroll(float dist) {
+	public virtual void scroll(float dist) {
 		bounds.Y += dist * 0.8f;
 	}
 }

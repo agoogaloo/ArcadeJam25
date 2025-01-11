@@ -97,7 +97,7 @@ public class Levels {
 	public void GameOver() {
 		gameOver = true;
 		curentSpeed = 0;
-		highScores = new(100);
+		highScores = new(Globals.score.currScore);
 		Console.WriteLine("game over :(");
 	}
 }

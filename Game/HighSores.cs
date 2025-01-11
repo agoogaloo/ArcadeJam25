@@ -113,28 +113,22 @@ public class HighScores {
 		}
 
 		/*Raylib.DrawTextEx(Assets.monoFont, "SPLOOSH!", new(Globals.globalGameCentre - (8 * 3), 15), Assets.monoFont.BaseSize, 1, Color.White);*/
-		/*spriteBatch.DrawString(Assets.font, "BAMBOOZLED BY A BUCCANEER", new Vector2(2, 10), Color.White);*/
 		if (time < 1) {
 			return;
 		}
 		if (addingScore) {
 			Raylib.DrawTextEx(Assets.monoFont, "NEW HIGH SCORE!", new(Globals.globalGameCentre - (15 * 3), 20), Assets.monoFont.BaseSize, 1, Color.White);
 			Raylib.DrawTextEx(Assets.monoFont, "NAME " + name, new(Globals.globalGameCentre - 30, 45), Assets.monoFont.BaseSize, 1, Color.White);
-			/*spriteBatch.DrawString(Assets.font, "NEW HIGH SCORE!", new Vector2(76-(15*3), 25), Color.White);*/
-			/*spriteBatch.DrawString(Assets.font, "NAME:" + name, new Vector2(76-30, 35), Color.White);*/
 			if ((int)(time * 3) % 2 == 0) {
 				Raylib.DrawTexture(Assets.cursor, Globals.globalGameCentre + (cursor * 6), 41, Color.White);
 			}
 		}
 		else {
 			Raylib.DrawTextEx(Assets.monoFont, "HIGH SCORES", new(Globals.globalGameCentre - (11 * 3), 30), Assets.monoFont.BaseSize, 1, Color.White);
-			/*spriteBatch.DrawString(Assets.font, "HIGH SCORES", new Vector2(76-(11*3), 30), Color.White);*/
 		}
 		for (int i = 0; i < 5; i++) {
 			string text = scores[i * 2] + ":" + scores[i * 2 + 1];
 			Raylib.DrawTextEx(Assets.monoFont, text, new(Globals.globalGameCentre - (3 * text.Length), 55 + 6 * i), Assets.monoFont.BaseSize, 1, Color.White);
-			/*spriteBatch.DrawString(Assets.font, text, new Vector2(76-(3*text.Length), 50+ 6 * i), Color.White);*/
 		}
-
 	}
 }

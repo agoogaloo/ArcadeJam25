@@ -11,4 +11,5 @@ class Globals {
 				 new(226, 165, 96,255),new(237, 206, 94,255) ];
 	public static UI ui = new();
 	public static Levels levels;
+	public static Score score = new();
 }

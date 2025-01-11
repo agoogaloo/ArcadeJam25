@@ -63,6 +63,7 @@ public class Fishing {
 				Reel();
 				if (lineLen <= 0.2) {
 					castState = CastState.Idle;
+					Globals.score.catchEnd();
 					collider.Remove();
 				}
 				DoLinePhysics();
@@ -83,6 +84,7 @@ public class Fishing {
 		Reel();
 		Globals.levels.FishScroll(bitFish.bounds.Centre);
 		if (lineLen <= 0.2) {
+			Globals.score.catchEnd();
 			castState = CastState.Idle;
 			bitFish.Catch();
 			collider.Remove();
@@ -93,6 +95,7 @@ public class Fishing {
 	}
 
 	public void Cast(float performance, float angle = 0) {
+		Globals.score.cast(performance);
 		float strength = 5 + performance * 5;
 
 		angle *= MathF.PI / 180;//converting to radians
@@ -155,6 +158,7 @@ public class Fishing {
 			bitFish = fish;
 			lineWeight = fish.weight;
 			castState = CastState.Bite;
+			Globals.score.sizeMulti(1);
 		}
 	}
 	public void Remove() {

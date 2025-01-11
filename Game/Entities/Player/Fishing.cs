@@ -157,6 +157,9 @@ public class Fishing {
 			castState = CastState.Bite;
 		}
 	}
+	public void Remove() {
+		collider.Remove();
+	}
 }
 
 public enum CastState { Idle, Casting, Cast, Bite }

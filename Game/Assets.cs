@@ -8,6 +8,7 @@ public class Assets {
 	public static Font smallPixel = Raylib.LoadFont("res/fonts/smallPixel.png");
 
 	public static Texture2D ui = Raylib.LoadTexture("res/textures/ui.png");
+	public static Texture2D cursor = Raylib.LoadTexture("res/textures/cursor.png");
 	public static Texture2D reelTut = Raylib.LoadTexture("res/textures/tut/reel.png");
 	public static Texture2D rodTut = Raylib.LoadTexture("res/textures/tut/rod.png");
 	public static Texture2D castTut = Raylib.LoadTexture("res/textures/tut/cast.png");

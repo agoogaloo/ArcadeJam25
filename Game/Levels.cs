@@ -1,6 +1,7 @@
 
 using System.Numerics;
 using ArcadeJam.Entities;
+using YarEngine;
 using YarEngine.Entities;
 using YarEngine.Graphics;
 
@@ -8,19 +9,26 @@ namespace ArcadeJam;
 
 public class Levels {
 	GameCamera camera;
+	Player player;
 	float curentSpeed = 0, levelBuffDist = 10;
 	List<ScrollObj> staticEntities = new();
 	Tutorial tut;
-	private bool inTut = true;
+	HighScores highScores;
+	public bool inTut = true, gameOver = false;
 
 
 	public Levels(GameCamera camera) {
 		this.camera = camera;
-		Player p = new();
-		tut = new(p);
-		staticEntities.Add(p);
-		EntityManager.QueueEntity(p);
+		camera.offset = new(-Assets.ui.Width, 0);
+		player = new();
+		tut = new(player);
+		highScores = new(-1);
+		staticEntities.Add(player);
+		EntityManager.QueueEntity(player);
 		spawnIntro();
+		GameBase.debugScreen.RegisterModule(delegate {
+			return new LevelInfoMod();
+		});
 	}
 
 
@@ -36,10 +44,20 @@ public class Levels {
 		if (inTut) {
 			tut.Update(time);
 		}
+		if (gameOver) {
+			highScores.Update(time);
+			if (highScores.finished) {
+				EntityManager.ClearLayer([0, 1]);
+				Globals.levels = new(camera);
+			}
+		}
 	}
 	public void Draw(GameCamera cam) {
 		if (inTut) {
 			tut.Draw(cam);
+		}
+		if (gameOver) {
+			highScores.Draw();
 		}
 	}
 	public void FishScroll(Vector2 fishBounds) {
@@ -75,5 +93,11 @@ public class Levels {
 	public void endTut() {
 		inTut = false;
 		curentSpeed += 3f;
+	}
+	public void GameOver() {
+		gameOver = true;
+		curentSpeed = 0;
+		highScores = new(100);
+		Console.WriteLine("game over :(");
 	}
 }

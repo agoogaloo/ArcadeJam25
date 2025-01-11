@@ -18,7 +18,7 @@ public class Player : Entity, ScrollObj {
 	Sprite paddleSprite = new(Assets.playerPaddle, 4, new(0.5f, 0));
 	Sprite lureSprite = new(Assets.lure);
 
-	public Rect bounds { get; private set; } = new(83, 100, 3, 6);
+	public Rect bounds { get; private set; } = new(Globals.globalGameCentre - 33, 100, 3, 6);
 	public Vector2 vel = new(0, 0);
 	public Fishing fishing { get; private set; }
 	PlayerCollision collision;
@@ -124,7 +124,10 @@ public class Player : Entity, ScrollObj {
 	public override void Draw(GameCamera cam) {
 		camera = cam;
 
-		lureSprite.Draw(cam, fishing.lureBounds);
+		if (fishing.castState != CastState.Bite && fishing.castState != CastState.Idle) {
+
+			lureSprite.Draw(cam, fishing.lureBounds.Centre + new Vector2(0, 2));
+		}
 
 		CurrentSprite().Draw(cam, bounds.Centre);
 		cam.DrawLine(getRodLoc(), fishing.lureBounds.Centre, Globals.palette[9]);
@@ -184,5 +187,10 @@ public class Player : Entity, ScrollObj {
 
 	public void scroll(float dist) {
 		bounds.Y += dist * 0.3f;
+	}
+
+	public override void OnRemove() {
+		collision.Remove();
+		fishing.Remove();
 	}
 }

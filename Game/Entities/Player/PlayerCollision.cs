@@ -49,7 +49,14 @@ public class PlayerCollision {
 			Globals.ui.lives = lives;
 		}
 		player.vel = knockBack;
+		if (lives <= 0) {
+			player.shouldRemove = true;
+			Globals.levels.GameOver();
+		}
 
+	}
+	public void Remove() {
+		collision.Remove();
 	}
 
 }

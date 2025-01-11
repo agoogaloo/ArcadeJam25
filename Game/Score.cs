@@ -2,9 +2,9 @@
 namespace ArcadeJam;
 
 public class Score {
-	float[] castTimings = [1.3f, 1, 0.8f];
 	float[] sizeMultis = [0, 1, 1.5f, 2];
-	int[] castScores = [100, 50, 50, 100];
+	float[] castTimings = [1.3f, 1, 0.8f, 0];
+	int[] castScores = [50, 50, 50, 100];
 	public int currScore, castScore = 0;
 	public float multi = 0;
 

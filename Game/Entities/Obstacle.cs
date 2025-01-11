@@ -8,8 +8,8 @@ namespace ArcadeJam.Entities;
 
 public class Obstacle : Entity, ScrollObj {
 
-	Sprite sprite = new(Assets.obstacle);
-	Rect bounds = new(0, 0, 9, 11);
+	Sprite sprite = new(Assets.rock);
+	Rect bounds = new(0, 0, 11, 8);
 	Collider<Obstacle> collision;
 
 	public Obstacle(Vector2 loc) {
@@ -21,6 +21,9 @@ public class Obstacle : Entity, ScrollObj {
 		collision.DoCollision<PlayerCollision>(Collide);
 	}
 	public override void Draw(GameCamera cam) {
+		if (bounds.Y - cam.offset.Y > 160) {
+			shouldRemove = true;
+		}
 		sprite.Draw(cam, bounds.Centre);
 	}
 	private void Collide(Collider<PlayerCollision> p) {
@@ -30,5 +33,8 @@ public class Obstacle : Entity, ScrollObj {
 	}
 	public void scroll(float dist) {
 		bounds.Y += dist;
+	}
+	public override void OnRemove() {
+		collision.Remove();
 	}
 }

@@ -8,6 +8,7 @@ public class TutFish : Fish {
 
 
 	public TutFish(Vector2 start) : base(start) {
+		init();
 		idleSpeed = 0.7f;
 		fightSpeed = 1;
 		sprite.frameDelay = 0.2;

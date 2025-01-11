@@ -22,7 +22,9 @@ public class Assets {
 	public static Texture2D fish = Raylib.LoadTexture("res/textures/fish.png");
 	public static Texture2D smallFish = Raylib.LoadTexture("res/textures/fish/small.png");
 
-	public static Texture2D obstacle = Raylib.LoadTexture("res/textures/icon.png");
+	public static Texture2D rock = Raylib.LoadTexture("res/textures/rock.png");
+	public static Texture2D cat = Raylib.LoadTexture("res/textures/cat.png");
+	public static Texture2D kayaker = Raylib.LoadTexture("res/textures/cat.png");
 
 
 }

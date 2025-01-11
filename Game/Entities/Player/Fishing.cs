@@ -115,7 +115,7 @@ public class Fishing {
 			for (int i = 0; i < reelInputs.Length; i++) {
 				if (InputHandler.GetButton(reelInputs[i]).JustPressed) {
 					reelIndex = i + 1;
-					targetLen -= 2f;
+					targetLen -= 1f;
 					reelIndex %= reelInputs.Length;
 				}
 			}
@@ -123,7 +123,8 @@ public class Fishing {
 		}
 		if (InputHandler.GetButton(reelInputs[reelIndex]).JustPressed) {
 			reelIndex++;
-			targetLen = Math.Max(0, targetLen - 3f);
+			Console.WriteLine("reeling pow:" + (1 - lineWeight) * 3 + 1 + " weight:" + lineWeight);
+			targetLen = Math.Max(0, targetLen - (1 + (1 - lineWeight) * 3));
 			reelSprite.Update(2);
 
 		}

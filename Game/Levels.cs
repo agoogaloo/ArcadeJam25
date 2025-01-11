@@ -48,6 +48,7 @@ public class Levels {
 			highScores.Update(time);
 			if (highScores.finished) {
 				EntityManager.ClearLayer([0, 1]);
+				Globals.score = new();
 				Globals.levels = new(camera);
 			}
 		}

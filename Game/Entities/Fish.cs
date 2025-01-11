@@ -9,7 +9,7 @@ namespace ArcadeJam.Entities;
 public class Fish : Entity, ScrollObj {
 
 	protected float fightSpeed = 2f, idleSpeed = 1;
-	public float weight { get; protected set; } = 0.3f;
+	public float weight { get; protected set; } = 0.5f;
 	protected Fishing? bitLure;
 
 	public Rect bounds = new(0, 0, 5, 5);
@@ -22,8 +22,12 @@ public class Fish : Entity, ScrollObj {
 
 
 	public Fish(Vector2 start) {
-		sprite.frameDelay = 0.2;
 		bounds.Centre = start;
+		init();
+	}
+	protected void init() {
+		UpdateIndex = 0;
+		sprite.frameDelay = 0.2;
 		collision = new(bounds, this);
 		vision = new(visionShape, this, "vision");
 
@@ -77,12 +81,15 @@ public class Fish : Entity, ScrollObj {
 
 	public virtual void Catch() {
 		shouldRemove = true;
-		collision.Remove();
-		vision.Remove();
 	}
 
 	public virtual void scroll(float dist) {
 		bounds.Y += dist * 0.8f;
+	}
+
+	public override void OnRemove() {
+		collision.Remove();
+		vision.Remove();
 	}
 }
 

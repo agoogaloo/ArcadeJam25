@@ -52,6 +52,10 @@ public class Levels {
 				Globals.levels = new(camera);
 			}
 		}
+		else {
+			Globals.score.Update(time);
+
+		}
 	}
 	public void Draw(GameCamera cam) {
 		if (inTut) {
@@ -86,9 +90,12 @@ public class Levels {
 	}
 
 	private void spawnIntro() {
-		TutFish f = new(new(83, 70));
-		EntityManager.QueueEntity(f);
-		staticEntities.Add(f);
+		TutFish f1 = new(new(35, 70));
+		TutFish f2 = new(new(200 - 34 - 35, 70));
+		EntityManager.QueueEntity(f1);
+		EntityManager.QueueEntity(f2);
+		staticEntities.Add(f1);
+		staticEntities.Add(f2);
 	}
 
 	public void endTut() {
@@ -98,7 +105,7 @@ public class Levels {
 	public void GameOver() {
 		gameOver = true;
 		curentSpeed = 0;
-		highScores = new(Globals.score.currScore);
+		highScores = new((int)Globals.score.currScore);
 		Console.WriteLine("game over :(");
 	}
 }

@@ -11,7 +11,7 @@ public class PlayerCollision {
 	Collider<PlayerCollision> collision;
 	Sprite rollSprite;
 	public float invincibility = 0;
-	public bool rolling = false;
+	public bool rolling = false, hasDodged = false;
 	float rollTimer = 0;
 
 	private Player player;
@@ -28,6 +28,7 @@ public class PlayerCollision {
 		if (InputHandler.GetButton("B").JustPressed && rollTimer == 0) {
 			rollTimer = rollTime;
 			rolling = true;
+			hasDodged = false;
 			invincibility = MathF.Max(invincibility, 0.3f);
 			rollSprite.frame = 0;
 			rollSprite.playing = true;
@@ -41,6 +42,10 @@ public class PlayerCollision {
 	}
 	public void Damage(Vector2 knockBack) {
 		if (invincibility > 0 && rolling) {
+			if (!hasDodged && player.fishing.castState == CastState.Bite) {
+				hasDodged = true;
+				Globals.score.rollBonus();
+			}
 			return;
 		}
 		if (invincibility == 0) {

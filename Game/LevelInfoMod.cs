@@ -14,7 +14,11 @@ public class LevelInfoMod : DebugModule {
 
 	public override void DrawFull(GameCamera cam, float pixelScale) {
 		int height = (int)Raylib.MeasureTextEx(font, "P", fontSize, 1).Y + 1;
-		Raylib.DrawTextEx(font, "LEVEL INFO", loc, fontSize, 1, Color.White);
+		Raylib.DrawTextEx(font, "GLOBAL INFO", loc, fontSize, 1, Color.White);
 		Raylib.DrawTextEx(font, "-gameOver:" + Globals.levels.gameOver, new(loc.X, loc.Y + 1 * height), fontSize, 1, Color.White);
+		Raylib.DrawTextEx(font, "-countTime:" + Globals.score.countTime, new(loc.X, loc.Y + 2 * height), fontSize, 1, Color.White);
+		Raylib.DrawTextEx(font, "-castTime:" + Globals.score.castTime, new(loc.X, loc.Y + 3 * height), fontSize, 1, Color.White);
+		Raylib.DrawTextEx(font, "-nextCast:" + Globals.score.nextCast, new(loc.X, loc.Y + 4 * height), fontSize, 1, Color.White);
+		Raylib.DrawTextEx(font, "-castScore:" + Globals.score.castScore, new(loc.X, loc.Y + 5 * height), fontSize, 1, Color.White);
 	}
 }

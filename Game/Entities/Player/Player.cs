@@ -12,13 +12,13 @@ public class Player : Entity, ScrollObj {
 
 	float accel = 0.3f, maxSpeed = 1.7f, friction = 0.1f, camSpeed = 0.0f, rollDelay = 0.5f;
 
-	Sprite rodSprite = new(Assets.playerRod, 7);
-	Sprite rollSprite = new(Assets.playerRoll, 4);
+	Sprite rodSprite = new(Assets.playerRod, 7, new(0, -.5f));
+	Sprite rollSprite = new(Assets.playerRoll, 4, new(2, 0));
 	Sprite reelSprite = new(Assets.playerReel, 4);
-	Sprite paddleSprite = new(Assets.playerPaddle, 4, new(0.5f, 0));
+	Sprite paddleSprite = new(Assets.playerPaddle, 4, new(.5f, 0));
 	Sprite lureSprite = new(Assets.lure);
 
-	public Rect bounds { get; private set; } = new(Globals.globalGameCentre - 33, 100, 3, 6);
+	public Rect bounds { get; private set; } = new(Globals.globalGameCentre - 33, 115, 3, 6);
 	public Vector2 vel = new(0, 0);
 	public Fishing fishing { get; private set; }
 	PlayerCollision collision;
@@ -41,6 +41,7 @@ public class Player : Entity, ScrollObj {
 	}
 
 	public override void Update(double updateTime) {
+		bounds.Height = 4;
 		//friction
 		if (vel.X > 0) {
 			vel.X -= MathF.Min(friction, vel.X);

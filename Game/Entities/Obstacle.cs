@@ -8,18 +8,20 @@ namespace ArcadeJam.Entities;
 
 public class Obstacle : Entity, ScrollObj {
 
-	Sprite sprite = new(Assets.rock);
+	Sprite sprite = new(Assets.rock, 2);
 	Rect bounds = new(0, 0, 11, 8);
 	Collider<Obstacle> collision;
 
 	public Obstacle(Vector2 loc) {
 		bounds.Centre = loc;
+		sprite.frame = Random.Shared.Next() % 2;
 		collision = new(bounds, this);
 	}
 
 	public override void Update(double updateTime) {
 		collision.DoCollision<PlayerCollision>(Collide);
 	}
+
 	public override void Draw(GameCamera cam) {
 		if (bounds.Y - cam.offset.Y > 160) {
 			shouldRemove = true;

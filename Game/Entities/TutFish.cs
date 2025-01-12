@@ -8,14 +8,13 @@ public class TutFish : Fish {
 
 
 	public TutFish(Vector2 start) : base(start) {
+		bounds.Centre = start;
+		visionShape = new(0, 0, 30);
+		size = 0;
 		init();
 		idleSpeed = 0.7f;
 		fightSpeed = 1;
 		sprite.frameDelay = 0.2;
-		bounds.Centre = start;
-		visionShape = new(0, 0, 30);
-		collision = new(bounds, this);
-		vision = new(visionShape, this, "vision");
 	}
 	protected override void idleMove(double time) {
 		visionShape.Centre = bounds.Centre;

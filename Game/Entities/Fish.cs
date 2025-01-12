@@ -8,6 +8,7 @@ namespace ArcadeJam.Entities;
 
 public class Fish : Entity, ScrollObj {
 
+	public int size { get; protected set; } = 1;
 	protected float fightSpeed = 2f, idleSpeed = 1;
 	public float weight { get; protected set; } = 0.5f;
 	protected Fishing? bitLure;
@@ -80,6 +81,8 @@ public class Fish : Entity, ScrollObj {
 	}
 
 	public virtual void Catch() {
+		collision.Remove();
+		vision.Remove();
 		shouldRemove = true;
 	}
 

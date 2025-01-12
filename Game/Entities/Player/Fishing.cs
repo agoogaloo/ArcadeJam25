@@ -123,10 +123,11 @@ public class Fishing {
 		}
 		if (InputHandler.GetButton(reelInputs[reelIndex]).JustPressed) {
 			reelIndex++;
-			Console.WriteLine("reeling pow:" + (1 - lineWeight) * 3 + 1 + " weight:" + lineWeight);
 			targetLen = Math.Max(0, targetLen - (1 + (1 - lineWeight) * 3));
 			reelSprite.Update(2);
-
+			if (castState == CastState.Bite) {
+				Globals.score.reelBonus();
+			}
 		}
 		reelIndex %= reelInputs.Length;
 	}
@@ -159,7 +160,7 @@ public class Fishing {
 			bitFish = fish;
 			lineWeight = fish.weight;
 			castState = CastState.Bite;
-			Globals.score.sizeMulti(1);
+			Globals.score.bite(fish.size);
 		}
 	}
 	public void Remove() {

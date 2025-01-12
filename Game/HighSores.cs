@@ -17,6 +17,7 @@ public class HighScores {
 
 	public HighScores(int score) {
 		this.score = score;
+		scoresPath = System.AppDomain.CurrentDomain.BaseDirectory + scoresPath;
 		LoadScores();
 		foreach (String i in scores) {
 			Console.WriteLine(i + ", ");

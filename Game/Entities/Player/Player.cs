@@ -126,11 +126,13 @@ public class Player : Entity, ScrollObj {
 		camera = cam;
 
 		if (fishing.castState != CastState.Bite && fishing.castState != CastState.Idle) {
-
 			lureSprite.Draw(cam, fishing.lureBounds.Centre + new Vector2(0, 2));
 		}
 
-		CurrentSprite().Draw(cam, bounds.Centre);
+		if (!collision.damaged || (int)(collision.invincibility * 10) % 2 == 0) {
+			CurrentSprite().Draw(cam, bounds.Centre);
+
+		}
 		cam.DrawLine(getRodLoc(), fishing.lureBounds.Centre, Globals.palette[9]);
 
 	}

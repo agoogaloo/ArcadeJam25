@@ -11,7 +11,7 @@ public class PlayerCollision {
 	Collider<PlayerCollision> collision;
 	Sprite rollSprite;
 	public float invincibility = 0;
-	public bool rolling = false, hasDodged = false;
+	public bool rolling = false, damaged = false, hasDodged = false;
 	float rollTimer = 0;
 
 	private Player player;
@@ -34,7 +34,11 @@ public class PlayerCollision {
 			rollSprite.playing = true;
 		}
 		rollSprite.Update(time);
-		invincibility = MathF.Max(0, (float)(invincibility - time));
+		invincibility -= (float)time;
+		if (invincibility <= 0) {
+			invincibility = 0;
+			damaged = false;
+		}
 		rollTimer = (float)Math.Max(0, rollTimer - time);
 		if (rollTimer == 0) {
 			rolling = false;
@@ -50,7 +54,8 @@ public class PlayerCollision {
 		}
 		if (invincibility == 0) {
 			lives--;
-			invincibility = 1;
+			invincibility = 1.5f;
+			damaged = true;
 			Globals.ui.lives = lives;
 		}
 		player.vel = knockBack;

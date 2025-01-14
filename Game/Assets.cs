@@ -23,7 +23,8 @@ public class Assets {
 	public static Texture2D smallFish = LoadTexture("res/textures/fish/small.png");
 
 	public static Texture2D rock = LoadTexture("res/textures/rock.png");
-	public static Texture2D cat = LoadTexture("res/textures/cat.png");
+	public static Texture2D catL = LoadTexture("res/textures/catL.png");
+	public static Texture2D catR = LoadTexture("res/textures/catR.png");
 	public static Texture2D ileneL = LoadTexture("res/textures/ileneL.png");
 	public static Texture2D ileneR = LoadTexture("res/textures/ileneR.png");
 	public static Texture2D warn = LoadTexture("res/textures/warning.png");

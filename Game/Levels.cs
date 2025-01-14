@@ -89,7 +89,7 @@ public class Levels {
 			return;
 		}
 
-		Obstacle o = new Rock(new(x, camera.offset.Y));
+		Obstacle o = new Cat(new(x, camera.offset.Y));
 		EntityManager.QueueEntity(o);
 		staticEntities.Add(o);
 
@@ -102,6 +102,10 @@ public class Levels {
 		EntityManager.QueueEntity(f2);
 		staticEntities.Add(f1);
 		staticEntities.Add(f2);
+
+		Obstacle o = new Cat(new(75, 100));
+		EntityManager.QueueEntity(o);
+		staticEntities.Add(o);
 	}
 
 	public void endTut() {

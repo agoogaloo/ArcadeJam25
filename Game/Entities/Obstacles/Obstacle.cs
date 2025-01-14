@@ -11,8 +11,9 @@ public abstract class Obstacle : Entity, ScrollObj {
 	protected Sprite sprite = new(Assets.rock, 2);
 	protected Shape bounds = new Rect(0, 0, 11, 8);
 	protected Collider<Obstacle> collision;
-	public override void Update(double updateTime) {
 
+
+	public override void Update(double updateTime) {
 		collision.DoCollision<PlayerCollision>(Collide);
 	}
 

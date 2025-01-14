@@ -11,7 +11,7 @@ public class Levels {
 	GameCamera camera;
 	Player player;
 	float curentSpeed = 0, levelBuffDist = 10;
-	List<ScrollObj> staticEntities = new();
+	List<ScrollObj> movingEntities = new();
 	Tutorial tut;
 	HighScores highScores;
 	public bool inTut = true, gameOver = false;
@@ -23,7 +23,7 @@ public class Levels {
 		player = new();
 		tut = new(player);
 		highScores = new(-1);
-		staticEntities.Add(player);
+		movingEntities.Add(player);
 		EntityManager.QueueEntity(player);
 		spawnIntro();
 		GameBase.debugScreen.RegisterModule(delegate {
@@ -34,7 +34,7 @@ public class Levels {
 
 	public void Update(double time) {
 		float scrollDist = (float)(curentSpeed * time);
-		foreach (ScrollObj o in staticEntities) {
+		foreach (ScrollObj o in movingEntities) {
 			o.scroll(scrollDist);
 		}
 		levelBuffDist -= scrollDist;
@@ -75,23 +75,29 @@ public class Levels {
 
 		int x = Random.Shared.Next() % (int)camera.screenSize.X;
 
-		if (Random.Shared.Next() % 3 == 0) {
+		if (Random.Shared.Next() % 4 == 0) {
 			Fish f = new Fish(new(x, camera.offset.Y));
 			EntityManager.QueueEntity(f);
-			staticEntities.Add(f);
+			movingEntities.Add(f);
 			return;
 
 		}
 		else if (Random.Shared.Next() % 3 == 1) {
 			Ilene i = new Ilene((int)camera.offset.Y, 20, Random.Shared.Next() % 2 == 0);
 			EntityManager.QueueEntity(i);
-			staticEntities.Add(i);
+			movingEntities.Add(i);
+			return;
+		}
+		else if (Random.Shared.Next() % 3 == 2) {
+			Obstacle c = new Cat(new(x, camera.offset.Y));
+			EntityManager.QueueEntity(c);
+			movingEntities.Add(c);
 			return;
 		}
 
-		Obstacle o = new Cat(new(x, camera.offset.Y));
+		Obstacle o = new Rock(new(x, camera.offset.Y));
 		EntityManager.QueueEntity(o);
-		staticEntities.Add(o);
+		movingEntities.Add(o);
 
 	}
 
@@ -100,12 +106,8 @@ public class Levels {
 		TutFish f2 = new(new(200 - 34 - 35, 70));
 		EntityManager.QueueEntity(f1);
 		EntityManager.QueueEntity(f2);
-		staticEntities.Add(f1);
-		staticEntities.Add(f2);
-
-		Obstacle o = new Cat(new(75, 100));
-		EntityManager.QueueEntity(o);
-		staticEntities.Add(o);
+		movingEntities.Add(f1);
+		movingEntities.Add(f2);
 	}
 
 	public void endTut() {

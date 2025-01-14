@@ -3,7 +3,7 @@ using Raylib_cs;
 namespace ArcadeJam;
 
 class Globals {
-	public static int globalGameCentre = 83 + 33;
+	public static int globalGameCentre = 83 + 33, gameWidth = 200 - 34;
 	public static Color[] palette = [new(13, 8, 18, 255), new(22, 44, 84,255),
 				 new(28, 76, 98, 255), new(59, 97, 102, 255),
 				 new(70, 133, 123,255), new(143, 21, 79, 255),

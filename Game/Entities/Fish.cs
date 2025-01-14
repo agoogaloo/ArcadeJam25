@@ -12,12 +12,15 @@ public class Fish : Entity, ScrollObj {
 	protected float fightSpeed = 2f, idleSpeed = 1;
 	public float weight { get; protected set; } = 0.5f;
 	protected Fishing? bitLure;
+	protected float fightTime = 0;
 
 	public Rect bounds = new(0, 0, 5, 5);
 	protected Circle visionShape = new(0, 0, 15);
 	protected Collider<Fish> collision;
 	protected Collider<Fish> vision;
 	protected Sprite sprite = new(Assets.smallFish, 2);
+
+
 
 
 
@@ -60,11 +63,7 @@ public class Fish : Entity, ScrollObj {
 		bounds.Centre += displacement;
 	}
 	protected virtual void fight(Fishing lure) {
-		Vector2 direction = lure.playerBounds.Centre - bounds.Centre;
-		if (direction == Vector2.Zero) {
-			direction = new(0, 1);
-		}
-		direction = -Vector2.Normalize(direction);
+		Vector2 direction = centreFight(lure);
 		bounds.Centre += direction * fightSpeed;
 	}
 
@@ -93,6 +92,38 @@ public class Fish : Entity, ScrollObj {
 	public override void OnRemove() {
 		collision.Remove();
 		vision.Remove();
+	}
+
+	protected Vector2 basicFight(Fishing lure) {
+		float border = 10;
+		Vector2 direction = bounds.Centre - lure.playerBounds.Centre;
+		Console.WriteLine("fishX:" + bounds.X + "dir:" + direction);
+		if (bounds.Centre.X < border && direction.X < 0) {
+			Console.WriteLine("bonk!");
+			direction.X = 0.1f;
+		}
+		else if (bounds.X > Globals.gameWidth - border && direction.X > 0) {
+			direction.X = -0.1f;
+		}
+		if (direction == Vector2.Zero) {
+			direction = new(0, 1);
+		}
+		return Vector2.Normalize(direction);
+	}
+	protected Vector2 centreFight(Fishing lure) {
+		float centre = Globals.gameWidth / 2, maxDist = centre - 5;
+		float cenreDist = centre - bounds.Centre.X;
+		float centringFact = cenreDist / maxDist;
+
+		Vector2 direction = bounds.Centre - lure.playerBounds.Centre;
+
+		if (direction == Vector2.Zero) {
+			direction = new(0, 1);
+		}
+		direction = Vector2.Normalize(direction);
+		direction.X += centringFact * centringFact * centringFact;
+		direction = Vector2.Normalize(direction);
+		return direction;
 	}
 }
 

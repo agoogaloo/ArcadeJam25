@@ -1,18 +1,21 @@
 
 using System.Numerics;
+using Raylib_cs;
 using YarEngine.Entities;
 using YarEngine.Graphics;
 using YarEngine.Physics;
+using YarEngine.Utils;
 
 namespace ArcadeJam.Entities;
 
 public class Fish : Entity, ScrollObj {
 
 	public int size { get; protected set; } = 1;
-	protected float fightSpeed = 2f, idleSpeed = 1;
+	protected float fightSpeed = 2f, idleSpeed = 1, sinMaxAngle = MathF.PI / 180 * 20;
 	public float weight { get; protected set; } = 0.5f;
 	protected Fishing? bitLure;
 	protected float fightTime = 0;
+	protected Vector2 direction = new(0, 1);
 
 	public Rect bounds = new(0, 0, 5, 5);
 	protected Circle visionShape = new(0, 0, 15);
@@ -42,12 +45,14 @@ public class Fish : Entity, ScrollObj {
 		visionShape.Centre = bounds.Centre;
 		if (bitLure != null) {
 			fight(bitLure);
+			fightTime += (float)time;
 		}
+		/*sprite.rotation = 0;*/
+		sprite.rotation = MathF.Atan2(direction.Y, direction.X) * 180 / MathF.PI + 90;
 
 		sprite.Update(time);
 	}
 	protected virtual void idleMove(double time) {
-
 	}
 
 	protected virtual void seeLure(Fishing lure) {
@@ -61,7 +66,7 @@ public class Fish : Entity, ScrollObj {
 		bounds.Centre += displacement;
 	}
 	protected virtual void fight(Fishing lure) {
-		Vector2 direction = centreFight(lure);
+		direction = basicFight(lure);
 		bounds.Centre += direction * fightSpeed;
 	}
 
@@ -93,22 +98,6 @@ public class Fish : Entity, ScrollObj {
 	}
 
 	protected Vector2 basicFight(Fishing lure) {
-		float border = 10;
-		Vector2 direction = bounds.Centre - lure.playerBounds.Centre;
-		Console.WriteLine("fishX:" + bounds.X + "dir:" + direction);
-		if (bounds.Centre.X < border && direction.X < 0) {
-			Console.WriteLine("bonk!");
-			direction.X = 0.1f;
-		}
-		else if (bounds.X > Globals.gameWidth - border && direction.X > 0) {
-			direction.X = -0.1f;
-		}
-		if (direction == Vector2.Zero) {
-			direction = new(0, 1);
-		}
-		return Vector2.Normalize(direction);
-	}
-	protected Vector2 centreFight(Fishing lure) {
 		float centre = Globals.gameWidth / 2, maxDist = centre - 5;
 		float cenreDist = centre - bounds.Centre.X;
 		float centringFact = cenreDist / maxDist;
@@ -116,23 +105,34 @@ public class Fish : Entity, ScrollObj {
 		Vector2 direction = bounds.Centre - lure.playerBounds.Centre;
 
 		if (direction == Vector2.Zero) {
-			direction = new(0, 1);
+			direction = new(0, -1);
 		}
+		/*direction = new(0, -1);*/
 		direction = Vector2.Normalize(direction);
-		direction = moveUp(direction);
-		direction.X += centringFact * centringFact * centringFact;
+		direction = Utils.Rotate(direction, MathF.PI / 2 * MathF.Pow(centringFact, 5));
 		direction = Vector2.Normalize(direction);
 		return direction;
 	}
-	protected Vector2 moveUp(Vector2 dir) {
-		if (dir.Y <= 0) {
-			return dir;
-		}
-		float origX = dir.X;
-		dir.X = Math.Sign(dir.X) * dir.Y;
-		dir.Y = -Math.Abs(origX);
-		return dir;
+	protected Vector2 complexFight(Fishing lure) {
+		float centre = Globals.gameWidth / 2, maxDist = centre - 5;
+		float cenreDist = centre - bounds.Centre.X;
+		float centringFact = cenreDist / maxDist;
 
+		Vector2 direction = bounds.Centre - lure.playerBounds.Centre;
+
+		if (direction == Vector2.Zero) {
+			direction = new(0, -1);
+		}
+		/*direction = new(0, -1);*/
+		direction = Vector2.Normalize(direction);
+		direction = sinMove(direction);
+		direction = Utils.Rotate(direction, MathF.PI / 2 * MathF.Pow(centringFact, 3));
+		direction = Vector2.Normalize(direction);
+		return direction;
+	}
+	protected Vector2 sinMove(Vector2 dir, float speed = 4) {
+		float angle = MathF.Sin(fightTime * speed) * sinMaxAngle;
+		return Utils.Rotate(dir, angle);
 	}
 }
 

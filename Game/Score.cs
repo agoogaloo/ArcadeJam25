@@ -5,9 +5,10 @@ namespace ArcadeJam;
 
 public class Score {
 	int reelPoints = 5, rollPoints = 50;
-	float countFactor = 15, maxMulti = 10;
+	float countFactor = 15;
 	float[] sizeMultis = [.1f, .2f, .3f, .5f];
-	int[] sizeBonus = [50, 100, 200];
+	float[] maxMultis = [1.5f, 2f, 5f, 10f];
+	int[] sizeBonus = [50, 100, 200, 500];
 	float[] castTimings = [1.3f, 1, 0.8f, 0];
 	int[] castScores = [50, 50, 50, 100];
 	public int castScore = 0, rollScore = 0, sizeScore, nextCast;
@@ -27,11 +28,10 @@ public class Score {
 			castTime += (float)time;
 			if (castTime > 15) {
 				castpenaltyTimer += (float)time;
-				if (castpenaltyTimer > 0.3f) {
-					castScore = Math.Max(0, castScore - 10);
+				if (rollPoints > 0.5f) {
+					rollPoints = Math.Max(0, rollPoints - 10);
 					castpenaltyTimer = 0;
 				}
-
 			}
 		}
 
@@ -91,9 +91,12 @@ public class Score {
 		nextCast = 0;
 		counting = false;
 		sizeScore += sizeBonus[size];
+		if (multi >= maxMultis[size]) {
+			return;
+		}
 		multi = Math.Max(1, multi);
 		multi += sizeMultis[Math.Min(size, sizeMultis.Length)];
-		multi = Math.Min(multi, maxMulti);
+		multi = Math.Min(multi, maxMultis[size]);
 	}
 	public void catchEnd() {
 		midCast = false;

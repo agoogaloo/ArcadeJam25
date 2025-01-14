@@ -23,8 +23,6 @@ public class Fish : Entity, ScrollObj {
 
 
 
-
-
 	public Fish(Vector2 start) {
 		bounds.Centre = start;
 		init();
@@ -121,9 +119,20 @@ public class Fish : Entity, ScrollObj {
 			direction = new(0, 1);
 		}
 		direction = Vector2.Normalize(direction);
+		direction = moveUp(direction);
 		direction.X += centringFact * centringFact * centringFact;
 		direction = Vector2.Normalize(direction);
 		return direction;
+	}
+	protected Vector2 moveUp(Vector2 dir) {
+		if (dir.Y <= 0) {
+			return dir;
+		}
+		float origX = dir.X;
+		dir.X = Math.Sign(dir.X) * dir.Y;
+		dir.Y = -Math.Abs(origX);
+		return dir;
+
 	}
 }
 

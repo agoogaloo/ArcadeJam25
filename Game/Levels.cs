@@ -75,15 +75,21 @@ public class Levels {
 
 		int x = Random.Shared.Next() % (int)camera.screenSize.X;
 
-		if (Random.Shared.Next() % 2 == 0) {
+		if (Random.Shared.Next() % 3 == 0) {
 			Fish f = new Fish(new(x, camera.offset.Y));
 			EntityManager.QueueEntity(f);
 			staticEntities.Add(f);
 			return;
 
 		}
+		else if (Random.Shared.Next() % 3 == 1) {
+			Ilene i = new Ilene((int)camera.offset.Y, 20, Random.Shared.Next() % 2 == 0);
+			EntityManager.QueueEntity(i);
+			staticEntities.Add(i);
+			return;
+		}
 
-		Obstacle o = new Obstacle(new(x, camera.offset.Y));
+		Obstacle o = new Rock(new(x, camera.offset.Y));
 		EntityManager.QueueEntity(o);
 		staticEntities.Add(o);
 
@@ -100,7 +106,7 @@ public class Levels {
 
 	public void endTut() {
 		inTut = false;
-		curentSpeed += 3f;
+		curentSpeed += 6f;
 	}
 	public void GameOver() {
 		gameOver = true;

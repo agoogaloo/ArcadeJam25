@@ -58,9 +58,6 @@ public class Game {
 		GameBase.pixelDraw = PixelDraw;
 		GameBase.gameCam = gameCam;
 
-
-		SaveManager.SaveData<string>("version", "v0.0");
-
 		Globals.levels = new(gameCam);
 		GameBase.Run();
 

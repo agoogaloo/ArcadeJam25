@@ -24,7 +24,9 @@ public class Assets {
 
 	public static Texture2D rock = LoadTexture("res/textures/rock.png");
 	public static Texture2D cat = LoadTexture("res/textures/cat.png");
-	public static Texture2D kayaker = LoadTexture("res/textures/cat.png");
+	public static Texture2D ileneL = LoadTexture("res/textures/ileneL.png");
+	public static Texture2D ileneR = LoadTexture("res/textures/ileneR.png");
+	public static Texture2D warn = LoadTexture("res/textures/warning.png");
 
 	private static Texture2D LoadTexture(String path) {
 		Texture2D val = Raylib.LoadTexture(System.AppDomain.CurrentDomain.BaseDirectory + path);
@@ -35,12 +37,11 @@ public class Assets {
 
 	}
 	private static Font LoadFont(String path) {
-		Font val = Raylib.LoadFont(System.AppDomain.CurrentDomain.BaseDirectory + path);
-		Console.WriteLine("font:" + val.ToString());
-		if (val.ToString() == "Raylib_cs.Font") {
-			val = Raylib.LoadFont(path);
+		string globalPath = System.AppDomain.CurrentDomain.BaseDirectory + path;
+		if (File.Exists(globalPath)) {
+			return Raylib.LoadFont(System.AppDomain.CurrentDomain.BaseDirectory + path);
 		}
-		return val;
+		return Raylib.LoadFont(path);
 
 	}
 

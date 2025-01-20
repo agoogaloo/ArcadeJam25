@@ -20,7 +20,7 @@ public class Assets {
 	public static Texture2D lure = LoadTexture("res/textures/lure.png");
 
 	public static Texture2D fish = LoadTexture("res/textures/fish.png");
-	public static Texture2D smallFish = LoadTexture("res/textures/fish/small.png");
+	public static Texture2D smallFish = LoadTexture("res/textures/fish/big.png");
 
 	public static Texture2D rock = LoadTexture("res/textures/rock.png");
 	public static Texture2D catL = LoadTexture("res/textures/catL.png");

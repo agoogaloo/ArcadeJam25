@@ -109,6 +109,7 @@ public class Score {
 			counting = false;
 			multi = 0;
 		}
+		Globals.levels.doCatchDifficulty();
 	}
 
 	public void reset() {

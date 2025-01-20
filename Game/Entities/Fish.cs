@@ -1,6 +1,5 @@
 
 using System.Numerics;
-using Raylib_cs;
 using YarEngine.Entities;
 using YarEngine.Graphics;
 using YarEngine.Physics;
@@ -49,6 +48,9 @@ public class Fish : Entity, ScrollObj {
 		}
 		/*sprite.rotation = 0;*/
 		sprite.rotation = MathF.Atan2(direction.Y, direction.X) * 180 / MathF.PI + 90;
+		sprite.rotation = MathF.Round(sprite.rotation / 90) * 90;
+		/*Console.WriteLine("true rot:"+sprite.rotation);*/
+
 
 		sprite.Update(time);
 	}

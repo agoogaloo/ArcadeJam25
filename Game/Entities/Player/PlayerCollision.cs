@@ -1,4 +1,5 @@
 using System.Numerics;
+using YarEngine;
 using YarEngine.Graphics;
 using YarEngine.Inputs;
 using YarEngine.Physics;
@@ -21,6 +22,7 @@ public class PlayerCollision {
 		this.player = player;
 		this.rollSprite = rollSprite;
 		Globals.ui.lives = lives;
+		GameBase.debugScreen.terminal.AddCommand("heal", (String s) => { lives += int.Parse(s); });
 	}
 
 	public void Update(double time) {

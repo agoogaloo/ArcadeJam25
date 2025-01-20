@@ -20,5 +20,6 @@ public class LevelInfoMod : DebugModule {
 		Raylib.DrawTextEx(font, "-castTime:" + Globals.score.castTime, new(loc.X, loc.Y + 3 * height), fontSize, 1, Color.White);
 		Raylib.DrawTextEx(font, "-nextCast:" + Globals.score.nextCast, new(loc.X, loc.Y + 4 * height), fontSize, 1, Color.White);
 		Raylib.DrawTextEx(font, "-castScore:" + Globals.score.castScore, new(loc.X, loc.Y + 5 * height), fontSize, 1, Color.White);
+		Raylib.DrawTextEx(font, "-difficulty:" + ((int)Globals.levels.difficulty * 100) / 100, new(loc.X, loc.Y + 6 * height), fontSize, 1, Color.White);
 	}
 }
